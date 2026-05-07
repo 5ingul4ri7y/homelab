@@ -15,7 +15,7 @@
 
 
 ## VPS Overview
-![VPS access through Windows Terminal](linux/vps.PNG)
+![VPS access through Windows Terminal](images/vps.PNG)
 
 - **Provider:** Oracle Cloud Infrastructure (OCI) — Free Tier
 - **OS:** Ubuntu 24.04 LTS

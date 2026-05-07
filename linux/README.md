@@ -15,7 +15,7 @@
 
 
 ## VPS Overview
-![/home/ubuntu/homelab/linux/images/vps.PNG]
+![VPS access through Windows Terminal](linux/vps.PNG)
 
 - **Provider:** Oracle Cloud Infrastructure (OCI) — Free Tier
 - **OS:** Ubuntu 24.04 LTS

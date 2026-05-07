@@ -1,6 +1,6 @@
 # SSH & Linux Permissions - Lab Drill
 
-> **Day 3 Lab** | Practiced on an Oracle VPS (Ubuntu)  
+> **Lab** | Practiced on an Oracle VPS (Ubuntu)  
 > Goal: Understand Linux user roles, file permissions, and access control by intentionally triggering `Permission denied` errors.
 
 ---
@@ -111,4 +111,4 @@ stat /opt/devshared          # Shows full metadata
 
 ## Notes
 
-This is part of a structured Linux/DevOps learning series. Each drill builds on the last. Day 3 focused on identity and access management at the OS level, which underpins everything from web servers to CI/CD pipelines.
+This is part of a structured Linux/DevOps learning series. Each drill builds on the last. 

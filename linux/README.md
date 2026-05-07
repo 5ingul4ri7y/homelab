@@ -15,6 +15,8 @@
 
 
 ## VPS Overview
+![/home/ubuntu/homelab/linux/images/vps.PNG]
+
 - **Provider:** Oracle Cloud Infrastructure (OCI) — Free Tier
 - **OS:** Ubuntu 24.04 LTS
 - **Purpose:** General-purpose homelab environment for Linux & sysadmin learning, lightweight service hosting, and security tooling practice

@@ -91,6 +91,20 @@ stat /opt/devshared          # Shows full metadata
 
 ---
 
+## SetUID Audit
+
+Ran a system-wide scan to identify all binaries with the SetUID bit set. These files run with the owner's privileges (usually root) regardless of who executes them, making them worth knowing about from a security standpoint.
+
+```bash
+find / -perm -4000 -type f 2>/dev/null
+```
+
+![SetUID audit output](images/suid-audit.PNG)
+
+Any binary here that doesn't need elevated privileges is a potential attack surface. The goal was to recognise what's expected on a default Ubuntu install versus what shouldn't be there.
+
+---
+
 ## Key Concepts Reinforced
 
 - **User types**: Regular, admin (sudoer), and service accounts each serve a different purpose. Mixing them up is a security risk.
@@ -111,4 +125,4 @@ stat /opt/devshared          # Shows full metadata
 
 ## Notes
 
-This is part of a structured Linux/DevOps learning series. Each drill builds on the last. Day 3 focused on identity and access management at the OS level, which underpins everything from web servers to CI/CD pipelines.
+This is part of a structured Linux/DevOps learning series. Each drill builds on the last. 

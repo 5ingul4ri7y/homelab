@@ -74,7 +74,7 @@ sudo systemctl enable --now labhealth
 systemctl status labhealth
 ```
 
-![labhealth service status|221](images/labhealth-status.png)
+![labhealth service status|221](images/labhealth-status.PNG)
 
 After running this, the service should show as `active (running)` in the status output.
 
@@ -84,7 +84,7 @@ After running this, the service should show as `active (running)` in the status 
 tail -f /var/log/labhealth.log
 ```
 
-![labhealth log output|172](images/labhealth-log.png)
+![labhealth log output|172](images/labhealth-log.PNG)
 
 `tail -f` follows the file in real time, printing new lines as they are written. Each line should appear roughly every 60 seconds with the timestamp, uptime, and load average.
 
@@ -102,7 +102,7 @@ Useful commands:
 - `journalctl -xe` - shows recent entries with extra context, useful when a service fails to start
 - `journalctl --disk-usage` - shows how much space the journal is using
 
-![journalctl output for labhealth|281](images/labhealth-journal.png)
+![journalctl output for labhealth|281](images/labhealth-journal.PNG)
 
 The journal is useful alongside the log file because it also captures startup errors, crashes, and restarts that the script itself would never write to the log.
 

@@ -87,6 +87,19 @@ awk '{print $3}' < errors.txt
 ```
 
 Instead of piping, this uses `<` to feed `errors.txt` as input directly into awk. Prints the third field from each line, which in this case is the word "Permission" from each "Permission denied" error.
+---
+
+# Find
+
+![find setUID audit](images/find1.PNG)
+
+```bash
+find /usr -perm /4000 -type f 2>/dev/null -exec ls -l {} +
+```
+
+Searches under `/usr` for any regular files (`-type f`) that have the setUID bit set in their permissions (`-perm /4000`). Permission errors are silently discarded with `2>/dev/null`. The `-exec ls -l {} +` part runs `ls -l` against every result so the output shows full permission strings, ownership, and file sizes rather than just paths.
+
+The setUID bit means the file runs with the privileges of its owner rather than the user executing it. Most of the results here are expected system binaries, but this is worth running periodically as a quick security check. If an unfamiliar binary shows up with setUID root, that is worth investigating since it could be a vector for privilege escalation.
 
 ---
 

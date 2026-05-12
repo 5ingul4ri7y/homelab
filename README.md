@@ -9,3 +9,5 @@ and IT security. Built on an Oracle Cloud VPS.
 - phase-2-networking/ — Networking fundamentals
 - phase-3-sysadmin/  — Server configuration & AD
 - phase-4-security/  — Security, hardening, incident response
+
+![VPS Setup](PowerUser/linux/README.md)

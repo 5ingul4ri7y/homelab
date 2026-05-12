@@ -10,4 +10,4 @@ and IT security. Built on an Oracle Cloud VPS.
 - phase-3-sysadmin/  — Server configuration & AD
 - phase-4-security/  — Security, hardening, incident response
 
-![PowerUser/linux/README.md]
+![[PowerUser/linux/README.md]]

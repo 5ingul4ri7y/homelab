@@ -8,7 +8,7 @@ All commands were run in an elevated PowerShell 7 session (Run as Administrator)
 
 # Creating Users and a Group
 
-![creating users bob, alice and group LabTeam](image/users1.PNG)
+![creating users bob, alice and group LabTeam](images/users1.PNG)
 
 ```powershell
 # Create local users
@@ -27,7 +27,7 @@ New-LocalGroup -Name "LabTeam"
 
 # Adding Members to a Group
 
-![adding alice and bob to LabTeam and verifying](image/users2.PNG)
+![adding alice and bob to LabTeam and verifying](images/users2.PNG)
 
 ```powershell
 # Add both users to the group in one command
@@ -46,7 +46,7 @@ Get-LocalGroupMember -Group "LabTeam"
 
 # Disabling and Enabling Accounts
 
-![disabling and enabling bob's account](image/user3.PNG)
+![disabling and enabling bob's account](images/user3.PNG)
 
 ```powershell
 # Disable an account

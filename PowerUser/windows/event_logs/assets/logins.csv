@@ -1,0 +1,102 @@
+#TYPE System.Diagnostics.Eventing.Reader.EventLogRecord
+"Message","Id","Version","Qualifiers","Level","Task","Opcode","Keywords","RecordId","ProviderName","ProviderId","LogName","ProcessId","ThreadId","MachineName","UserId","TimeCreated","ActivityId","RelatedActivityId","ContainerLog","MatchedQueryIds","Bookmark","LevelDisplayName","OpcodeDisplayName","TaskDisplayName","KeywordsDisplayNames","Properties"
+"An account failed to log on.
+
+Subject:
+	Security ID:		S-1-5-21-3953331062-2253762298-3360751163-1001
+	Account Name:		Sohaib
+	Account Domain:		DESKTOP-1AER3IJ
+	Logon ID:		0x28641
+
+Logon Type:			2
+
+Account For Which Logon Failed:
+	Security ID:		S-1-0-0
+	Account Name:		Sohaib
+	Account Domain:		DESKTOP-1AER3IJ
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006E
+	Sub Status:		0xC000006E
+
+Process Information:
+	Caller Process ID:	0x630
+	Caller Process Name:	C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+
+Network Information:
+	Workstation Name:	DESKTOP-1AER3IJ
+	Source Network Address:	-
+	Source Port:		-
+
+Detailed Authentication Information:
+	Logon Process:		Advapi  
+	Authentication Package:	Negotiate
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+This event is generated when a logon request fails. It is generated on the computer where access was attempted.
+
+The Subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.
+
+The Logon Type field indicates the kind of logon that was requested. The most common types are 2 (interactive) and 3 (network).
+
+The Process Information fields indicate which account and process on the system requested the logon.
+
+The Network Information fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.
+
+The authentication information fields provide detailed information about this specific logon request.
+	- Transited services indicate which intermediate services have participated in this logon request.
+	- Package name indicates which sub-protocol was used among the NTLM protocols.
+	- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.","4625","0",,"0","12544","0","-9218868437227405312","2964","Microsoft-Windows-Security-Auditing","54849625-5478-4994-a5ba-3e3b0328c30d","Security","772","848","DESKTOP-1AER3IJ",,"5/15/2026 9:36:03 AM","9477308b-e488-0001-ee30-779488e4dc01",,"Security","System.UInt32[]","System.Diagnostics.Eventing.Reader.EventBookmark","Information","Info","Logon","System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]","System.Collections.Generic.List`1[System.Diagnostics.Eventing.Reader.EventProperty]"
+"An account failed to log on.
+
+Subject:
+	Security ID:		S-1-5-21-3953331062-2253762298-3360751163-1001
+	Account Name:		Sohaib
+	Account Domain:		DESKTOP-1AER3IJ
+	Logon ID:		0x1F275
+
+Logon Type:			2
+
+Account For Which Logon Failed:
+	Security ID:		S-1-0-0
+	Account Name:		Sohaib
+	Account Domain:		DESKTOP-1AER3IJ
+
+Failure Information:
+	Failure Reason:		Unknown user name or bad password.
+	Status:			0xC000006E
+	Sub Status:		0xC000006E
+
+Process Information:
+	Caller Process ID:	0x9bc
+	Caller Process Name:	C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+
+Network Information:
+	Workstation Name:	DESKTOP-1AER3IJ
+	Source Network Address:	-
+	Source Port:		-
+
+Detailed Authentication Information:
+	Logon Process:		Advapi  
+	Authentication Package:	Negotiate
+	Transited Services:	-
+	Package Name (NTLM only):	-
+	Key Length:		0
+
+This event is generated when a logon request fails. It is generated on the computer where access was attempted.
+
+The Subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.
+
+The Logon Type field indicates the kind of logon that was requested. The most common types are 2 (interactive) and 3 (network).
+
+The Process Information fields indicate which account and process on the system requested the logon.
+
+The Network Information fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.
+
+The authentication information fields provide detailed information about this specific logon request.
+	- Transited services indicate which intermediate services have participated in this logon request.
+	- Package name indicates which sub-protocol was used among the NTLM protocols.
+	- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.","4625","0",,"0","12544","0","-9218868437227405312","1966","Microsoft-Windows-Security-Auditing","54849625-5478-4994-a5ba-3e3b0328c30d","Security","692","5620","DESKTOP-1AER3IJ",,"5/15/2026 8:37:17 AM","d1ef14d3-e47f-0000-f715-efd17fe4dc01",,"Security","System.UInt32[]","System.Diagnostics.Eventing.Reader.EventBookmark","Information","Info","Logon","System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]","System.Collections.Generic.List`1[System.Diagnostics.Eventing.Reader.EventProperty]"

@@ -127,7 +127,7 @@ Three tests run from PC1:
 
 # Lab File
 
-- [assets/dns_lab.pkt](assets/dns_lab.pkt)
+- [assets/DNS_lab.pkt](assets/dns_lab.pkt)
 
 ---
 

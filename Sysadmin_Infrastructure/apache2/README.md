@@ -1,9 +1,3 @@
-This is where website files live. Apache's default `DocumentRoot` points here.
-Ownership should be `www-data` (the Apache process user) for correct
-permissions.
-
----
-
 ## Installation and Initial Setup
 
 ```bash

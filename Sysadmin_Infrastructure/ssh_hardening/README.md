@@ -97,7 +97,7 @@ fail2ban is a log-monitoring daemon that automatically creates firewall rules to
 sudo apt install fail2ban -y
 ```
 
-![fail2ban installed and jail.conf copied](https://claude.ai/chat/assets/fail2ban1.png)
+![fail2ban installed and jail.conf copied](assets/fail2ban1.png)
 
 ### Configuration
 
@@ -119,7 +119,7 @@ findtime = 600
 bantime = -1
 ```
 
-![jail.local config written and verified](https://claude.ai/chat/assets/fail2ban2.png)
+![jail.local config written and verified](assets/fail2ban2.png)
 
 **enabled = true** -- Activates this jail.
 
@@ -141,7 +141,7 @@ sudo systemctl enable --now fail2ban
 
 The `--now` flag starts the service immediately in addition to enabling it at boot.
 
-![fail2ban enabled via systemctl](https://claude.ai/chat/assets/fail2ban3.png)
+![fail2ban enabled via systemctl](assets/fail2ban3.png)
 
 ### Verifying It Works
 
@@ -157,7 +157,7 @@ sudo tail -f /var/log/fail2ban.log
 
 The live log shows fail2ban actively finding IPs from the SSH auth log. Each `Found` line means an IP triggered a failed-auth pattern. The `Unban` line shows the automatic unban cycle working (for jails with a finite bantime). With `bantime = -1` configured, new bans will not unban automatically.
 
-![fail2ban status and live log](https://claude.ai/chat/assets/fail2ban4.png)
+![fail2ban status and live log](assets/fail2ban4.png)
 
 The volume of activity visible in the log within minutes of setup illustrates why these controls matter on any public-facing server. Automated scanners probe SSH continuously.
 

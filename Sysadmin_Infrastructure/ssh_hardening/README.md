@@ -110,7 +110,7 @@ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 The `.local` file takes precedence over `.conf`. A minimal SSH jail was written to `jail.local`:
 
 ```ini
-[ssh]
+[sshd]
 enabled = true
 port = <your-ssh-port>
 logpath = %(sshd_log)s

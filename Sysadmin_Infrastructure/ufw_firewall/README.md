@@ -1,11 +1,3 @@
-## Screenshot Assessment
-
-All 6 are safe. The Oracle VPS terminal tabs show no hostname, username, RAM, CPU, or kernel info anywhere in these outputs — just ufw command output and a vim view of `before.rules`. Network interface names (`ens3`, `wg0`) and the WireGuard internal subnet (`10.0.0.0/24`, a private RFC1918 range used for the VPN tunnel) are not sensitive. Clear to push.
-
-One thing to flag for accuracy: in **ufw6.png**, your before.rules content reads `-o ens3` correctly, but your rough notes typed `ense3` (typo) — I've fixed that in the README below.
-
----
-
 # UFW (Uncomplicated Firewall)
 
 UFW is a wrapper around iptables, covered in the previous lab. It trades some of

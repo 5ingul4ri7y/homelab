@@ -6,7 +6,6 @@ One thing to flag for accuracy: in **ufw6.png**, your before.rules content reads
 
 ---
 
-````markdown
 # UFW (Uncomplicated Firewall)
 
 UFW is a wrapper around iptables, covered in the previous lab. It trades some of

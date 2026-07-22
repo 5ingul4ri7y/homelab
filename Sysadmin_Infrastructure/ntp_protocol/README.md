@@ -90,5 +90,5 @@ sudo chronyc makestep chronyc tracking
 
 # Summary
 
-The NTP lab connected the abstract stratum hierarchy to actual working commands, `chronyc sources` and `chronyc tracking` are the tools that turn "is my clock in sync" from a vague question into something with concrete, checkable numbers, and seeing `makestep` force an immediate correction made the otherwise invisible gradual slewing process something I could actually observe happening.
+The NTP lab connected the abstract stratum hierarchy to actual working commands, `chronyc sources` and `chronyc tracking` are the tools that turn "is my clock in sync" from a vague question into something with concrete, checkable numbers and seeing `makestep` force an immediate correction made the otherwise invisible gradual slewing process something I could actually observe happening.
 

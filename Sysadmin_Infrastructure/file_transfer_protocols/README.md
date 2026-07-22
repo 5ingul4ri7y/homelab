@@ -97,4 +97,4 @@ which prompted for my SSH key passphrase rather than a password, then dropped me
 
 # Summary
 
-The FTP lab was really about seeing a well known vulnerability actually happen rather than just reading that FTP is insecure, watching a real username and password sitting in plaintext in a packet capture makes the "banned in most security policies" reputation concrete in a way that reading about it doesn't. SFTP by contrast required no additional setup at all, which was itself the useful lesson, since it rides entirely on infrastructure (SSH) that was almost certainly already correctly secured beforehand. 
+The FTP lab was really about seeing well known vulnerability actually happen rather than just reading that FTP is insecure, watching a real username and password sitting in plaintext in a packet capture makes the "banned in most security policies" reputation concrete in a way that reading about it doesn't. SFTP by contrast required no additional setup at all, which was itself the useful lesson, since it rides entirely on infrastructure (SSH) that was almost certainly already correctly secured beforehand. 

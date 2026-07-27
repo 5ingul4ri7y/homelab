@@ -7,9 +7,9 @@ A practical IT lab documenting hands-on work across Linux administration, Window
 | Phase | Folder | Status |
 |---|---|---|
 | PowerUser | [PowerUser/](PowerUser/) | Complete |
-| Networking | [networking/](networking/) | In progress |
-| Sysadmin | [sysadmin/](sysadmin/) | Upcoming |
-| Security | [security/](security/) | Upcoming |
+| Networking | [Networking/](Networking/) | Complete |
+| Sysadmin | [Sysadmin/](/Sysadmin_Infrastructure) | In Progress |
+| Security | [Security/](security/) | Upcoming |
 
 ## Environment
 

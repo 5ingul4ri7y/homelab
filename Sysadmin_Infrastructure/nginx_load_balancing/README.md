@@ -78,6 +78,36 @@ I then ran the command `sudo certbot --nginx -d sohaib-lab.duckdns.org` to get a
 
 As can be seen here, I modified the actual HTML for the site to be slightly different on both backends. It names the backend it is being served from. Upon hard reloading the page with `CTRL + SHIFT + R`, it definitely uses the other backend previously not used. This also confirms that the algorithm being used by the nginx reverse proxy is indeed round-robin, which goes through the available backends one by one in turn.
 
+## Final Architecture :
+```
+                         INTERNET
+                            │
+                            │ HTTPS :443
+                            ▼
+                 ┌─────────────────────┐
+                 │       VPS 1         │
+                 │                     │
+                 │  NGINX              │
+                 │  Reverse Proxy      │
+                 │  Load Balancer      │
+                 └──────────┬──────────┘
+                            │
+                 ┌──────────┴──────────┐
+                 │                     │
+          :8081 │                     │ :8082
+                 ▼                     ▼
+        ┌────────────────┐    ┌────────────────┐
+        │ Docker         │    │ VPS 2          │
+        │ Apache         │    │                │
+        │ backend_a      │    │ Docker Apache  │
+        │                │    │ backend_b      │
+        └────────────────┘    └────────────────┘
+                                      ▲
+                                      │
+                              Allowed only from
+                                  VPS 1 IP
+```
+
 ## Load Balancing Algorithms
 
 ### Round Robin

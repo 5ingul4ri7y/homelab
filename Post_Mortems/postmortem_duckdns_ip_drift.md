@@ -1,12 +1,12 @@
 # Post-Mortem: DNS Resolution Failure After Server Reboot (DuckDNS IP Drift)
 
 ## Summary
-After a routine reboot of the Oracle Cloud file-server instance, `sohaib-lab.duckdns.org` stopped resolving to a working server, while direct access to the instance's public IP still worked fine. The domain was pointing at a stale IP left over from before the reboot, and there was no automation in place to refresh it. The site was unreachable by domain name until I manually resynced the DuckDNS record.
+After a routine reboot of the Oracle Cloud homelab instance, `sohaib-lab.duckdns.org` stopped resolving to a working server, while direct access to the instance's public IP still worked fine. The domain was pointing at a stale IP left over from before the reboot, and there was no automation in place to refresh it. The site was unreachable by domain name until I manually resynced the DuckDNS record.
 
 ## Timeline
 No logging or alerting was set up for this service at the time, so this is reconstructed in relative order rather than exact timestamps.
 
-- Rebooted the Oracle Cloud file-server instance as routine maintenance.
+- Rebooted the Oracle Cloud homelab instance as routine maintenance.
 - On restart, the instance's ephemeral public IP got reassigned by Oracle Cloud, since this instance wasn't configured with a reserved/static public IP.
 - DuckDNS kept serving the last IP it had been told, which was now stale. There was no cron job or any other automation pushing IP updates to DuckDNS yet, so nothing corrected the record on its own.
 - Tried reaching `sohaib-lab.duckdns.org` and got no response.

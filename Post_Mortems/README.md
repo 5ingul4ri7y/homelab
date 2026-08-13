@@ -8,7 +8,7 @@ The point of keeping these separately from the individual lab READMEs is that mo
 
 |Post-mortem|What broke|
 |---|---|
-|[OCI Default Firewall](https://claude.ai/chat/postmortem_oci_default_firewall.md)|Server unreachable on 80/443 despite correct NSG rules, caused by Oracle's default OS-level iptables block|
-|[DuckDNS IP Drift](https://claude.ai/chat/postmortem_duckdns_ip_drift.md)|Domain stopped resolving after a reboot because the instance's public IP changed and DuckDNS was never told|
-|[WireGuard FORWARD Chain](https://claude.ai/chat/postmortem_wireguard_forward_chain.md)|Tunnel handshake succeeded but passed no traffic, caused by an appended FORWARD rule landing after Oracle's default REJECT|
+|[OCI Default Firewall](postmortem_oci_default_firewall.md)|Server unreachable on 80/443 despite correct NSG rules, caused by Oracle's default OS-level iptables block|
+|[DuckDNS IP Drift](postmortem_duckdns_ip_drift.md)|Domain stopped resolving after a reboot because the instance's public IP changed and DuckDNS was never told|
+|[WireGuard FORWARD Chain](postmortem_wireguard_forward_chain.md)|Tunnel handshake succeeded but passed no traffic, caused by an appended FORWARD rule landing after Oracle's default REJECT|
 

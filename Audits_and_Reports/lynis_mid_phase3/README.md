@@ -10,13 +10,14 @@ Up to this point in phase 3 I had been hardening individual services one at a ti
 
 ## Result
 
+![[assets/lynis_report_mid_phase3.png]]
+
 - **Hardening index:** 66 / 100
 - **Tests performed:** 268
 - **Plugins enabled:** 1
 - **Scan mode:** Normal
 - **Modules run:** Security audit, Vulnerability scan (Compliance status not applicable at this stage)
 
-Full output saved as a screenshot in `assets/lynis_report_mid_phase3.png`.
 
 ## My take
 

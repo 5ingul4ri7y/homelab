@@ -16,7 +16,7 @@ Running it at the end of the phase gives me a concrete baseline before moving in
 
 ## Result
 
-![[assets/lynis_report_end_phase3.png]]
+![Lynis End of Phase 3 Report](assets/lynis_report_end_phase3.png)
 
 * **Hardening index:** 69 / 100
 * **Tests performed:** 270

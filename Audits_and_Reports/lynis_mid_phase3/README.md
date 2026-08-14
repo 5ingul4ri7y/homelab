@@ -10,7 +10,7 @@ Up to this point in phase 3 I had been hardening individual services one at a ti
 
 ## Result
 
-![[assets/lynis_report_mid_phase3.png]]
+![Lynis Report Mid Phase 3] (assets/lynis_report_mid_phase3.png)
 
 - **Hardening index:** 66 / 100
 - **Tests performed:** 268

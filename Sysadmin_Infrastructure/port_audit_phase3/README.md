@@ -12,7 +12,7 @@ This was the starting state for UDP. Most of it was expected: DNS on port 53 fro
 
 TCP told a similar story. Port 2222 is sshd, the non-standard port I moved SSH to. 80 and 443 are nginx, actively serving my lab site and handling TLS termination. Port 8081 is docker-proxy in front of backend_a, the apache container sitting behind the nginx reverse proxy. My first instinct was to say nginx is the only thing that can reach it, but that is an assumption, not a fact, since Docker inserts its own rules directly into iptables and those can bypass UFW's filter table entirely. So instead of trusting the assumption, I checked the OCI network security group and confirmed there is no ingress rule for 8081 from the internet, and UFW has none either. Two independent deny layers protecting it, that is the actual justification, not just "nginx is in front of it." Port 111 shows up again as rpcbind, same verdict as before. 41899 and 44047 are rpc.statd, and 3128 is squid, both tied to the two services already marked for removal.
 
-![Running services before cleanup](chat/assets/vps_audit3.png)
+![Running services before cleanup](assets/vps_audit3.png)
 
 For DNS specifically, keeping port 53 open needed more than "DNS is fine." named binds to more than just loopback and the WireGuard address, it also shows up on the Docker bridge at 172.17.0.1. What actually makes this safe is not the bind address, it is the `allow-recursion` setting inside the BIND config itself, restricted to loopback and 10.0.0.0/24, the WireGuard subnet. Anything outside that ACL gets refused at the application layer, regardless of which interface named happens to be sitting on. Port 953 is rndc, bound to loopback only, so no exposure there.
 

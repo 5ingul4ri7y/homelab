@@ -8,7 +8,7 @@ The goal was not simply to install services, but to understand how they fit toge
 
 ## Architecture
 
-![Homelab Architecture — End of Phase 3](assets/architecture-phase3.png)
+![Homelab Architecture — End of Phase 3](assets/architecture-diagram.webp)
 
 The Phase 3 environment has two distinct infrastructure domains.
 

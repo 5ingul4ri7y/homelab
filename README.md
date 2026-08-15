@@ -10,7 +10,7 @@ The lab combines Oracle Cloud infrastructure with a local Hyper-V environment. E
 
 ### Phase 3 — End State
 
-![Homelab Architecture — End of Phase 3](assets/homelab-architecture.png)
+![Homelab Architecture — End of Phase 3](assets/homelab-architecture.webp)
 
 The architecture is split into two major environments:
 

@@ -21,7 +21,7 @@ The cloud and local environments serve different purposes, while the Hyper-V int
 
 The diagram shows the major traffic paths, firewall layers, VPN access, DNS/DHCP services, web infrastructure, Active Directory, load balancing, and backup flow.
 
-**Interactive architecture diagram:** `https://sohaib-lab.duckdns.org/architecture-diagram.html`
+**Interactive architecture diagram:** https://sohaib-lab.duckdns.org/architecture-diagram.html
 
 ## Phases
 

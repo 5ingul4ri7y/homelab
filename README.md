@@ -10,7 +10,7 @@ The lab combines Oracle Cloud infrastructure with a local Hyper-V environment. E
 
 ### Phase 3 — End State
 
-![Homelab Architecture — End of Phase 3](assets/architecture-phase3.png)
+![Homelab Architecture — End of Phase 3](assets/homelab-architecture.png)
 
 The architecture is split into two major environments:
 
@@ -21,7 +21,7 @@ The cloud and local environments serve different purposes, while the Hyper-V int
 
 The diagram shows the major traffic paths, firewall layers, VPN access, DNS/DHCP services, web infrastructure, Active Directory, load balancing, and backup flow.
 
-**Interactive architecture diagram:** `docs/architecture-diagram.html`
+**Interactive architecture diagram:** `https://sohaib-lab.duckdns.org/architecture-diagram.html`
 
 ## Phases
 

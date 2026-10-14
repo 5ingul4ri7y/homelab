@@ -8,7 +8,7 @@ Suricata was already running on the VPS from the earlier labs, with the loopback
 
 ## Detection rule
 
-![[incident1.png]]
+![[assets/incident1.png]]
 
 I started with the detection side, a custom Suricata rule that alerts on any TCP traffic going to the C2 address:
 
@@ -22,7 +22,7 @@ EOF
 
 ## The fake C2 address
 
-![[incident2.png]]
+![[assets/incident2.png]]
 
 203.0.113.25 is inside 203.0.113.0/24, which is TEST-NET-3, a range IANA reserved for documentation. It is non-routable, so nothing sent to it can ever reach a real machine, which makes it safe to use as a fake attacker address. A socket can only bind to an address the machine actually owns, so I added the fake C2 address to the loopback interface as an alias:
 
@@ -35,7 +35,7 @@ ip addr show lo
 
 ## The fake C2 server
 
-![[incident3.png]]
+![[assets/incident3.png]]
 
 This script plays the role of the attacker's server. It binds to the fake C2 address on port 4444, waits for a single connection, then holds the session open for ten minutes so there is time to investigate. `SO_REUSEADDR` lets me restart it straight away without a bind error from the previous run.
 
@@ -64,7 +64,7 @@ The log only shows nohup's own message and not the "C2 listener ready" line, bec
 
 ## The fake malware
 
-![[incident4.png]]
+![[assets/incident4.png]]
 
 This is the "malware" on the compromised host. It connects out to the C2 address and then just holds the socket open for ten minutes, so the connection stays ESTABLISHED for the whole investigation. It waits two seconds before connecting to make sure the listener is up first.
 
@@ -83,7 +83,7 @@ The name `.sysupdate.py` is deliberate, it is hidden in `/tmp` and named like a 
 
 ## Triggering the incident
 
-![[incident5.png]]
+![[assets/incident5.png]]
 
 With `fast.log` being watched in one terminal (left), I launched the malware in another (right):
 
@@ -102,7 +102,7 @@ With the alert in `fast.log`, I worked through the incident the way a responder 
 
 ### Identification
 
-![[incident6.png]]
+![[assets/incident6.png]]
 
 First I confirmed the alert and what it said:
 
@@ -139,7 +139,7 @@ sudo ls -la /proc/2408/exe
 
 ### Digging into the processes
 
-![[incident7.png]]
+![[assets/incident7.png]]
 
 Then I pulled more detail from `/proc` and `lsof`:
 
@@ -155,7 +155,7 @@ sudo lsof -p 2425
 
 ### Containment
 
-![[incident8.png]]
+![[assets/incident8.png]]
 
 I did not kill anything yet. Killing the process first would destroy the evidence of what it was doing, so the first move was to block the C2 address and then document the running state:
 
@@ -165,7 +165,7 @@ sudo ufw deny out to 203.0.113.25
 
 This is the step that would cut off the channel to a real C2 server.
 
-![[incident9.png]]
+![[assets/incident9.png]]
 
 Then I documented the processes before they disappeared:
 
@@ -178,13 +178,13 @@ sudo cat /proc/2408/maps > /tmp/ir-maps-evidence.txt
 
 `strace` was attached to both processes in the background to watch their network system calls. I saved the listener's open files to an evidence file, which shows stdout and stderr going to `/tmp/.c2listener.log`, the socket listening on port 4444, and the established connection from port 32832.
 
-![[incident10.png]]
+![[assets/incident10.png]]
 
 I also saved its memory map. What is visible in the screenshot is the python3.12 binary, the heap, and the usual shared libraries like libc, libexpat, libz and libm, nothing unexpected mapped in.
 
 ### Eradication
 
-![[incident11.png]]
+![[assets/incident11.png]]
 
 Before removing anything, I hashed the file. In a real case this hash is what gets submitted to VirusTotal to see whether the file is known malware:
 
@@ -213,7 +213,7 @@ The `killed by SIGKILL` lines in the screenshot are the strace sessions reportin
 
 ### Recovery
 
-![[incident12.png]]
+![[assets/incident12.png]]
 
 For recovery I first checked for anything else suspicious on the box and reviewed which files had been accessed, using auditd from the hardening sprint:
 
@@ -236,6 +236,6 @@ sudo suricatasc -c ruleset-reload-rules
 The loopback alias was only there for the lab, so it goes. I removed the firewall rule because the lab is over, but in a real incident that block would stay in place. Removing the `LAB:` prefix from the rule message turns the lab rule into a standing detection for that address, and the rules are reloaded so it takes effect.
 
 ## Post Mortem & Risk Assessment
-Post Mortem : 
-Risk Assessment : 
+Post Mortem : https://github.com/5ingul4ri7y/homelab/blob/main/Post_Mortems/postmortem_vps_c2_incident.md
+Risk Assessment : https://github.com/5ingul4ri7y/homelab/tree/main/Audits_and_Reports/risk_assessment_vps
 

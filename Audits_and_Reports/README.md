@@ -7,3 +7,7 @@ Each entry is its own folder, tagged with the tool used and the context it was r
 ## Entries
 
 - [lynis_mid_phase3](./lynis_mid_phase3/) — first full system Lynis scan, run mid phase 3 right after the Apache hardening lab
+
+- [lynix_end_phase3](./lynis_end_phase3/) - second mid-phase Lynis scan.
+
+- [risk_assessment_vps](./risk_assessment_vps/) - VPS Risk assessment formal document, assessed right after incident response lab.

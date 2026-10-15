@@ -11,3 +11,5 @@ Each entry is its own folder, tagged with the tool used and the context it was r
 - [lynix_end_phase3](./lynis_end_phase3/) - second mid-phase Lynis scan.
 
 - [risk_assessment_vps](./risk_assessment_vps/) - VPS Risk assessment formal document, assessed right after incident response lab.
+
+- [incident_report_c2](./c2_incident_report/) - Incident report for the simulated C2 incident during the security phase.

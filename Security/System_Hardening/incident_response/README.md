@@ -235,10 +235,14 @@ sudo suricatasc -c ruleset-reload-rules
 
 The loopback alias was only there for the lab, so it goes. I removed the firewall rule because the lab is over, but in a real incident that block would stay in place. Removing the `LAB:` prefix from the rule message turns the lab rule into a standing detection for that address, and the rules are reloaded so it takes effect.
 
+## Incident Report
+
+The incident report for this incident is as [c2_incident_report](https://github.com/5ingul4ri7y/homelab/tree/main/Audits_and_Reports/c2_incident_report)
+
 ## Post-Mortem
 
 The post-mortem for this incident is at [post_mortem_c2](https://github.com/5ingul4ri7y/homelab/blob/main/Post_Mortems/postmortem_vps_c2_incident.md)
 
-## Post-Mortem & Risk Assessment
+## Risk Assessment
 
 The risk assessment for the VPS is at [risk_assessment](https://github.com/5ingul4ri7y/homelab/blob/main/Audits_and_Reports/risk_assessment_vps).

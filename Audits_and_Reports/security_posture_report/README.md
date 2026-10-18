@@ -83,7 +83,7 @@ The Lynis hardening index went from 66 at baseline to 69 before the hardening sp
 
 ## Related Documents
 
-- [Security audit](https://github.com/5ingul4ri7y/homelab/tree/main/Security/System_Hardening/vps_security_audit)
+- [Security audit](../../Security/System_Hardening/vps_security_audit/README.md)
 - [VPS risk assessment](../risk_assessment_vps/README.md)
 - [Incident report](../c2_incident_report/README.md)
 - [Post-mortem](../../Post_Mortems/postmortem_vps_c2_incident.md)

@@ -8,9 +8,9 @@ Each entry is its own folder, tagged with the tool used and the context it was r
 
 - [Lynis Score Mid Phase 3](./lynis_mid_phase3/) — first full system Lynis scan, run mid phase 3 right after the Apache hardening lab
 
-- [Lynis Score End Phase 3](./lynis_end_phase3/) - second mid-phase Lynis scan.
+- [Lynis Score End Phase 3](./lynis_end_phase3/) - final Lynis scan for Phase 3, run after the port audit and service cleanup.
 
-- [Risk Asessment Report](./risk_assessment_vps/) - VPS Risk assessment formal document, assessed right after incident response lab.
+- [Risk Assessment Report](./risk_assessment_vps/) - VPS Risk assessment formal document, assessed right after incident response lab.
 
 - [Incident Report](./c2_incident_report/) - Incident report for the simulated C2 incident during the security phase.
 

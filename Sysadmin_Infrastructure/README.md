@@ -1,345 +1,106 @@
-# Phase 3 — Sysadmin Infrastructure
+# Phase 3 - Sysadmin Infrastructure: Services, Directory and Hardening
 
-Phase 3 moves the homelab from networking fundamentals into actual systems infrastructure.
+## What I Built
 
-The phase covers publicly reachable web infrastructure on Oracle Cloud, host-level security, DNS and DHCP, load balancing, automated operations, file services, time synchronization, and a Windows Active Directory environment running inside Hyper-V.
+A public-facing web stack on Oracle Cloud (Nginx reverse proxy with Let's Encrypt TLS in front of two Dockerized Apache backends, one on a second VPS locked to the first VPS's IP) with hardened SSH, layered OCI and host firewalls, BIND9 and WireGuard-aware DNS, and offsite rsync backups. Alongside it, a Hyper-V network ("Internal-LAN") with a Windows Server 2022 Active Directory domain (`corp.lab`) and a domain-joined Windows 10 client, plus Ubuntu VMs running DNS, DHCP, HAProxy, Samba, NFS and FTP labs. The phase ended with a port-by-port audit of the VPS and a Lynis re-measurement.
 
-The goal was not simply to install services, but to understand how they fit together, verify their behaviour, and document the reasoning behind the resulting configuration.
-
-## Architecture
-
-![Homelab Architecture — End of Phase 3](assets/architecture-diagram.webp)
-
-The Phase 3 environment has two distinct infrastructure domains.
-
-### Oracle Cloud
-
-The cloud side contains a primary public-facing VPS and a restricted secondary VPS.
-
-The primary VPS handles:
-
-* Nginx reverse proxy
-* TLS termination
-* SSH access
-* WireGuard VPN
-* BIND9
-* host-level firewalling
-* dynamic DNS
-* backup automation
-
-Nginx can forward traffic to the cloud backends, while the secondary VPS is restricted to traffic originating from the primary VPS.
-
-### Hyper-V
-
-The local infrastructure runs on an internal Hyper-V network.
-
-The lab contains:
-
-* `DC01` — Active Directory domain controller
-* `Client1` — domain-joined Windows client
-* `VM2` — Linux test client
-* `VM1` — infrastructure services
-* DHCP
-* BIND9
-* HAProxy
-* two Dockerized Apache backends
-
-The internal Hyper-V network is intentionally documented as **not air-gapped from the host**. The host's `vEthernet` internal switch provides connectivity between the PC and Hyper-V guests.
-
-## What Was Built
-
-### 1. Web Infrastructure
-
-Apache2 was first configured directly, including virtual hosts and server hardening.
-
-The architecture was then extended so that Nginx became the public-facing reverse proxy and TLS termination point.
-
-The cloud web path is therefore conceptually:
-
-```text
-Internet
-   │
-   ▼
-OCI network filtering
-   │
-   ▼
-UFW / iptables
-   │
-   ▼
-Nginx
-   ├──► cloud backend A
-   └──► restricted cloud backend B
-```
-
-TLS certificates are issued and renewed using Certbot and Let's Encrypt.
-
-### 2. SSH & Host Security
-
-SSH was hardened with:
-
-* key-based authentication
-* password authentication disabled
-* root login disabled
-* reduced authentication attempts
-* non-default SSH port
-* configuration stored under `sshd_config.d/`
-
-Fail2Ban was added to react to repeated authentication failures.
-
-The resulting access path is protected by both cloud-level and host-level controls.
-
-### 3. Firewalling
-
-The VPS uses multiple filtering layers:
-
-```text
-Internet
-   │
-   ▼
-OCI Network Security Group
-   │
-   ▼
-UFW
-   │
-   ▼
-iptables / netfilter
-   │
-   ▼
-Service
-```
-
-The firewall configuration was not treated as correct simply because the rules looked reasonable.
-
-Open listeners were audited directly and justified against:
-
-* `ss -ulnp`
-* `ss -tlnp`
-* `systemctl`
-* UFW rules
-* OCI network rules
-* service configuration
-
-This led to the removal of unnecessary services including rpcbind, rpc-statd, Squid, fwupd, ModemManager, and udisks2.
-
-### 4. DNS
-
-DNS work covered both theory and operational configuration.
-
-The phase included:
-
-* BIND9 authoritative DNS
-* recursive resolution
-* forward zones
-* reverse DNS
-* PTR records
-* recursion ACLs
-* internal DNS
-* dnsmasq comparison
-* DNS/DHCP service comparisons
-* SPF/DKIM/DMARC record analysis
-
-The final VPS BIND configuration restricts recursive access rather than relying only on the interface on which the service happens to listen.
-
-### 5. DHCP
-
-ISC DHCP Server was configured with:
-
-* DHCP address pool
-* reservations
-* lease verification
-* client testing
-
-The Hyper-V infrastructure VM provides DHCP for the internal lab network.
-
-### 6. Load Balancing
-
-Two different load-balancing designs exist in the Phase 3 environment and should not be confused.
-
-#### Cloud-side Nginx
-
-Nginx acts as the public reverse proxy and can distribute web traffic across the cloud backends.
-
-#### Hyper-V HAProxy
-
-HAProxy is a separate local infrastructure service running inside VM1.
-
-It distributes requests across two Dockerized Apache backends:
-
-```text
-HAProxy
-   ├──► backend_a :8001
-   └──► backend_b :8002
-```
-
-Health checks, failover, and multiple balancing algorithms were tested.
-
-### 7. Active Directory
-
-The Windows side of the lab was extended into a working Active Directory domain.
-
-The environment includes:
-
-* Windows Server 2022 domain controller
-* `corp.lab`
-* organizational units
-* users and groups
-* Group Policy
-* GPO inheritance
-* LDAP queries
-* domain-joined Windows client
-* Fine-Grained Password Policy
-
-LDAP fundamentals were explored directly before relying on the Active Directory management interface.
-
-### 8. Fine-Grained Password Policy
-
-A Fine-Grained Password Policy was created and applied to the administrative security group.
-
-The policy was verified through Active Directory PowerShell commands and by testing the resulting lockout behaviour from the domain client.
-
-The important lesson was that policy configuration was verified through **resultant policy and actual client behaviour**, rather than assumed from the configuration alone.
-
-### 9. Backups
-
-Nightly offsite backups were automated using rsync and cron.
-
-The process includes:
-
-* scheduled backup execution
-* offsite destination
-* backup logging
-* recovery verification
-* documentation against the 3-2-1 backup principle
-
-### 10. Time Synchronization
-
-NTP was configured using chrony.
-
-The lab focused on:
-
-* NTP fundamentals
-* stratum hierarchy
-* synchronization state
-* verification of the resulting time source
-
-### 11. File Services & Transfer Protocols
-
-The phase also includes practical work with:
-
-* Samba
-* NFS
-* Samba vs NFS comparison
-* FTP
-* SFTP
-* TFTP
-
-The purpose was to understand the protocol and service differences rather than treat file sharing as a single generic feature.
-
-### 12. System Auditing
-
-The phase ended with a full VPS listener and service audit.
-
-Every listening port and running service was evaluated against:
-
-1. What is it?
-2. Why does it need to exist?
-3. What happens if it is removed?
-
-The phase closed with a Lynis audit showing a hardening-index change from **66/100 to 69/100**, with the final measurement taken after the infrastructure cleanup.
+![Homelab Architecture - End of Phase 3](assets/architecture-diagram.webp)
 
 ## Key Accomplishments
 
-* Built Apache2 web services and named virtual hosts
-* Hardened Apache configuration and HTTP security headers
-* Placed Nginx in front of the web stack
-* Implemented TLS with Certbot and Let's Encrypt
-* Added dynamic DNS automation
-* Hardened SSH and added Fail2Ban
-* Built layered OCI + host firewall controls
-* Audited every VPS listener
-* Removed unnecessary services
-* Built BIND9 authoritative and recursive DNS
-* Configured reverse DNS
-* Built DHCP services and reservations
-* Compared BIND9 and dnsmasq
-* Deployed Nginx-based cloud backend routing
-* Built HAProxy load balancing inside Hyper-V
-* Created a working Active Directory domain
-* Configured OUs and GPOs
-* Tested LDAP directly
-* Implemented and verified FGPP
-* Automated nightly offsite backups
-* Configured chrony/NTP
-* Practiced Samba, NFS, FTP, SFTP, and TFTP
-* Completed a system-wide Lynis audit
+**Web and proxy**
+- [x] Built Apache2 with a named virtual host on `sohaib-lab.duckdns.org`, then hardened it: `ServerTokens Prod`, `ServerSignature Off`, six security headers, unused modules disabled (A+ on securityheaders.com for the Apache site)
+- [x] Issued and auto-renewed Let's Encrypt certificates and verified the chain (`certbot --apache`, `certbot renew --dry-run`, `openssl s_client -showcerts`)
+- [x] Put Nginx in front as a round-robin reverse proxy across two Docker backends, one on a separate VPS reachable only from VPS 1 (OCI NSG rule plus host firewall)
+- [x] Built HAProxy on a Hyper-V VM with HTTP health checks, a stats page on port 8404, automatic failover (`docker stop backend_b`) and manual enable/disable through the stats socket
 
-## What I Learned
+**SSH and firewalling**
+- [x] Hardened SSH: key-only auth, no root login, `MaxAuthTries 3`, `LoginGraceTime 30`, non-default port, with a second session kept open during changes
+- [x] Added fail2ban with a custom SSH jail (3 retries in 600 seconds)
+- [x] Learned iptables from the ground up on an isolated VM (rule order, default-DROP policy, `multiport`) and wrote a default-deny firewall script
+- [x] Moved the VPS to UFW with default deny, WireGuard routed rules and NAT masquerading in `/etc/ufw/before.rules`
+- [x] Audited every listener and running service on the VPS, justifying each against `ss`, UFW, the OCI NSG and service config
 
-The central lesson of Phase 3 was that **configuration is not verification**.
+**DNS and DHCP**
+- [x] Built BIND9 as a forwarding, caching resolver with `allow-recursion` restricted to a trusted ACL (query time 481 ms cold, 0 ms from cache)
+- [x] Wrote an authoritative zone for `lab.internal` (SOA, NS, A, CNAME), validated with `named-checkzone`, and tested NXDOMAIN
+- [x] Added a reverse zone with PTR records (`dig -x`) and an internal `lab.local` zone serving a second VM with a search domain
+- [x] Replaced BIND9 with dnsmasq (DNS plus DHCP), then with isc-dhcp-server plus BIND9, and watched the full DORA exchange in the logs
+- [x] Documented BIND9 vs dnsmasq and inspected SPF, DKIM and DMARC records on real domains (`dig _dmarc.google.com TXT`)
 
-A firewall rule can look correct while another layer still blocks the traffic.
+**Active Directory**
+- [x] Queried LDAP directly with `ldapsearch` before building anything in Windows
+- [x] Promoted Windows Server 2022 to a domain controller (`DC01`, forest `corp.lab`), joined a Windows 10 client, and created OUs, users and a security group in PowerShell
+- [x] Enforced a wallpaper GPO on the IT OU and verified it with `gpresult /r`
+- [x] Created a Fine-Grained Password Policy (16-character minimum, 3-attempt lockout, 30-minute duration) and proved it by locking out a user from the client
 
-A service can appear internal while another networking layer exposes it.
+**File services, backup and operations**
+- [x] Served Samba shares (public guest and private authenticated) and NFS exports with per-IP `rw`/`ro` rules, tested from two clients
+- [x] Captured FTP credentials in plaintext with `tcpdump`, then used SFTP over the existing SSH setup
+- [x] Automated weekday 2 AM offsite backups with rsync, a logging script and cron, and tested a restore
+- [x] Verified time sync with chrony (`chronyc tracking`, `makestep`)
+- [x] Partitioned a new 10GB disk with `parted` (GPT, ext4, XFS, swap) and mounted it persistently by UUID in `/etc/fstab`
 
-A security policy can exist without actually being applied to the intended account.
+**Measured outcomes**
+- [x] Disabled six unneeded services (rpcbind, rpc-statd, squid, fwupd, ModemManager, udisks2); running services went from 29 to 23 and all six related listening ports disappeared
+- [x] Lynis hardening index improved from 66 to 69 (see [lynis_mid_phase3](../Audits_and_Reports/lynis_mid_phase3/README.md) and [lynis_end_phase3](../Audits_and_Reports/lynis_end_phase3/README.md))
 
-A backup job can run successfully without proving that recovery works.
+## Technologies Used
 
-This phase repeatedly forced the same workflow:
+| Tool | Purpose | Evidence |
+|---|---|---|
+| Apache2 | Web server, virtual hosts, header hardening | [apache2/](apache2/README.md), [apache2_virtualhost/](apache2_virtualhost/README.md), [apache_hardening/](apache_hardening/README.md) |
+| Nginx, Docker | Reverse proxy and load balancing across containers | [nginx_load_balancing/](nginx_load_balancing/README.md) |
+| HAProxy | Health checks, failover, stats | [haproxy_load_balancing/](haproxy_load_balancing/README.md) |
+| Certbot, DuckDNS | TLS certificates and dynamic DNS | [dns_tls/](dns_tls/README.md) |
+| OpenSSH, fail2ban | SSH hardening and brute-force banning | [ssh_hardening/](ssh_hardening/README.md) |
+| iptables, UFW | Packet filtering and WireGuard routing | [iptables/](iptables/README.md), [ufw_firewall/](ufw_firewall/README.md) |
+| ss, systemctl, Lynis | Listener audit and hardening score | [port_audit_phase3/](port_audit_phase3/README.md) |
+| BIND9 | Recursive, authoritative and reverse DNS | [DNS_Labs/](DNS_Labs/bind9_caching_resolver/README.md) |
+| dnsmasq, isc-dhcp-server | DHCP and DNS for the internal network | [dnsmasq_dns_dhcp/](DNS_Labs/dnsmasq_dns_dhcp/README.md), [isc-dhcp-server/](isc-dhcp-server/README.md) |
+| Windows Server 2022, AD DS, Group Policy | Directory services and policy | [active_directory_ou_gpo/](active_directory_ou_gpo/README.md), [active_directory_fgpp/](active_directory_fgpp/README.md) |
+| LDAP (ldapsearch) | Directory protocol fundamentals | [active_directory_ldap/](active_directory_ldap/README.md) |
+| Samba, NFS, vsftpd, SFTP | File sharing and transfer | [samba_file_sharing/](samba_file_sharing/README.md), [nfs_protocol/](nfs_protocol/README.md), [file_transfer_protocols/](file_transfer_protocols/README.md) |
+| rsync, cron | Scheduled offsite backup | [rsync-backup-automation/](rsync-backup-automation/README.md) |
+| chrony | NTP time synchronization | [ntp_protocol/](ntp_protocol/README.md) |
+| parted, mkfs, fstab | Disk partitioning and persistent mounts | [linux_disk_partitioning/](linux_disk_partitioning/README.md) |
 
-> **Configure → observe → test → challenge the assumption → verify → document.**
+## Key Learnings
 
-That mindset became more important as the infrastructure became more interconnected.
+Configuration is not verification. A port I assumed was protected (Docker's 8081 behind Nginx) was only proven safe once I confirmed that neither the OCI NSG nor UFW allowed it. BIND9 was only safe because of its `allow-recursion` ACL, not because of which interface it listened on. The FGPP only counted once I saw the lockout happen from a real client, and the backup only counted once a restore worked.
 
-## Labs
+Services that look similar divide the work differently. dnsmasq does DNS and DHCP in one file, while isc-dhcp-server needs BIND9 beside it, and BIND9 itself splits options, zones and zone files across separate files. Samba keeps its own password database and NFS trusts client IPs. Choosing between them, and between Apache, Nginx and HAProxy, depends on the job, not on which one is "better".
 
-The directory structure below reflects the current repository rather than older lab names.
+## Files in This Directory
 
-### Web & Proxy Infrastructure
-
-* [`apache2/`](apache2/)
-* [`apache2_virtualhost/`](apache2_virtualhost/)
-* [`apache_hardening/`](apache_hardening/)
-* [`nginx_load_balancing/`](nginx_load_balancing/)
-* [`haproxy_load_balancing/`](haproxy_load_balancing/)
-* [`dns_tls/`](dns_tls/)
-
-### DNS & DHCP
-
-* [`DNS_Labs/`](DNS_Labs/)
-* [`isc-dhcp-server/`](isc-dhcp-server/)
-
-### Access & Firewalling
-
-* [`ssh_hardening/`](ssh_hardening/)
-* [`ufw_firewall/`](ufw_firewall/)
-* [`iptables/`](iptables/)
-* [`port_audit_phase3/`](port_audit_phase3/)
-
-### Active Directory
-
-* [`active_directory_ldap/`](active_directory_ldap/)
-* [`active_directory_ou_gpo/`](active_directory_ou_gpo/)
-* [`active_directory_fgpp/`](active_directory_fgpp/)
-
-### Operations & Infrastructure
-
-* [`rsync-backup-automation/`](rsync-backup-automation/)
-* [`ntp_protocol/`](ntp_protocol/)
-* [`linux_disk_partitioning/`](linux_disk_partitioning/)
-
-### File Services & Protocols
-
-* [`samba_file_sharing/`](samba_file_sharing/)
-* [`samba_vs_nfs/`](samba_vs_nfs/)
-* [`nfs_protocol/`](nfs_protocol/)
-* [`file_transfer_protocols/`](file_transfer_protocols/)
-
-## Phase Status
-
-**Phase 3 — Complete**
-
-The infrastructure built here becomes the foundation for the next stage of the homelab.
-
-**Next phase: Security.**
-
+| Folder | Description |
+|---|---|
+| [apache2/](apache2/README.md) | Install, OCI and iptables ports, custom default page |
+| [apache2_virtualhost/](apache2_virtualhost/README.md) | Config layout, virtual host, DuckDNS domain |
+| [apache_hardening/](apache_hardening/README.md) | ServerTokens, security headers, module cleanup, Lynis baseline |
+| [dns_tls/](dns_tls/README.md) | DuckDNS update script, Let's Encrypt, TLS handshake notes |
+| [nginx_load_balancing/](nginx_load_balancing/README.md) | Nginx reverse proxy across two Dockerized backends |
+| [haproxy_load_balancing/](haproxy_load_balancing/README.md) | HAProxy health checks, failover, stats socket |
+| [ssh_hardening/](ssh_hardening/README.md) | sshd settings and fail2ban |
+| [ufw_firewall/](ufw_firewall/README.md) | UFW rules, WireGuard routing and NAT |
+| [iptables/](iptables/README.md) | netfilter theory, interactive rules, firewall script |
+| [port_audit_phase3/](port_audit_phase3/README.md) | Listener audit, service cleanup, end-of-phase Lynis |
+| [DNS_Labs/bind9_caching_resolver/](DNS_Labs/bind9_caching_resolver/README.md) | Recursive caching resolver with trusted ACL |
+| [DNS_Labs/bind9_dns_server/](DNS_Labs/bind9_dns_server/README.md) | Authoritative zone, SOA, trailing dot behavior |
+| [DNS_Labs/bind9_reverse_dns/](DNS_Labs/bind9_reverse_dns/README.md) | Reverse zone and PTR records |
+| [DNS_Labs/bind9_internal_dns/](DNS_Labs/bind9_internal_dns/README.md) | Serving DNS to a second VM, search domain |
+| [DNS_Labs/dnsmasq_dns_dhcp/](DNS_Labs/dnsmasq_dns_dhcp/README.md) | dnsmasq DNS plus DHCP |
+| [DNS_Labs/bind9_vs_dnsmasq/](DNS_Labs/bind9_vs_dnsmasq/README.md) | Comparison of the two |
+| [DNS_Labs/dns_for_web_servers/](DNS_Labs/dns_for_web_servers/README.md) | A, AAAA, SOA, TXT records and the TLS layer |
+| [DNS_Labs/dns_email_security/](DNS_Labs/dns_email_security/README.md) | SPF, DKIM and DMARC |
+| [isc-dhcp-server/](isc-dhcp-server/README.md) | ISC DHCP with reservation, DORA in the logs |
+| [active_directory_ldap/](active_directory_ldap/README.md) | LDAP concepts and the domain controller build |
+| [active_directory_ou_gpo/](active_directory_ou_gpo/README.md) | OUs, users, domain join, GPOs and inheritance |
+| [active_directory_fgpp/](active_directory_fgpp/README.md) | Fine-Grained Password Policy and lockout test |
+| [samba_file_sharing/](samba_file_sharing/README.md) | Samba public and private shares |
+| [nfs_protocol/](nfs_protocol/README.md) | NFS exports and per-client access |
+| [samba_vs_nfs/](samba_vs_nfs/README.md) | Comparison of the two |
+| [file_transfer_protocols/](file_transfer_protocols/README.md) | FTP, SFTP and TFTP |
+| [rsync-backup-automation/](rsync-backup-automation/README.md) | rsync, cron, restore test, 3-2-1 rule |
+| [ntp_protocol/](ntp_protocol/README.md) | Stratum hierarchy and chrony |
+| [linux_disk_partitioning/](linux_disk_partitioning/README.md) | GPT, parted, filesystems, fstab by UUID |

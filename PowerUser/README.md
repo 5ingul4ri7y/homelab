@@ -1,93 +1,66 @@
-# PowerUser Phase
+# Phase 1 - PowerUser: Linux and Windows Command-Line Fundamentals
 
-This phase covers command-line proficiency and system administration fundamentals across both Linux and Windows. The goal was not just to memorise commands but to understand what the OS is actually doing when you run them, and to build the habit of working entirely from the terminal rather than relying on GUI tools.
+## What I Built
 
-The phase is split into two sections. Linux was practiced on a live Oracle Cloud VPS over SSH. Windows was practiced on the local machine and a Windows 10 VM running inside Hyper-V.
+A hardened Ubuntu 24.04 VPS on Oracle Cloud (key-only SSH, no root login) used for all Linux practice, plus a local Windows 10 machine and Hyper-V VMs (Windows 10 and Windows Server 2025 on an internal virtual switch) used for PowerShell practice. Everything was done from the terminal, with the goal of understanding what the OS is doing rather than memorising commands.
 
----
+## Key Accomplishments
 
-## Linux
+**Linux (Oracle Cloud VPS)**
+- [x] Hardened SSH from day one: key authentication only, password auth and root login disabled, max 3 attempts, X11 forwarding off (`/etc/ssh/sshd_config`)
+- [x] Created three account types (regular user, sudoer, `nologin` service account) and triggered `Permission denied` on purpose to watch the permission model work (`useradd`, `usermod -aG`, `chmod 600`, `chmod 770`)
+- [x] Ran a system-wide SetUID audit to separate expected binaries from potential privilege escalation vectors (`find / -perm -4000 -type f`)
+- [x] Built a custom systemd service that logs uptime and load average every 60 seconds (`labhealth.service`, `journalctl -u labhealth`)
+- [x] Created, formatted, mounted and unmounted a 100MB ext4 filesystem on a loop device (`dd`, `mkfs.ext4`, `mount -o loop`)
+- [x] Added a 1GB persistent swapfile (`fallocate`, `mkswap`, `swapon`, `/etc/fstab`)
+- [x] Wrote a dated tar backup script for the repo (`tar -czf`)
+- [x] Pulled the attacking IPs out of real SSH bruteforce traffic on an unadvertised server (`journalctl -p err | grep -i maximum | awk ... | sort | uniq`)
 
-### [VPS Setup and SSH](linux/README.md)
+**Windows (PowerShell 7 and Hyper-V)**
+- [x] Installed PowerShell 7 via winget instead of using the built-in 5.1 (`winget install Microsoft.Powershell`)
+- [x] Managed local users and groups entirely from PowerShell (`New-LocalUser`, `New-LocalGroup`, `Add-LocalGroupMember`, `Disable-LocalUser`)
+- [x] Managed software with winget and NTFS permissions with icacls, including inheritance flags and an explicit deny (`icacls /grant "LabTeam:(OI)(CI)(M)"`, `icacls /deny`)
+- [x] Queried and exported Security event logs for failed logons (`Get-WinEvent -FilterHashtable @{logname='Security'; id=4625} | Export-CSV`)
+- [x] Hardened the local password and lockout policy: minimum length 0 to 12, lockout threshold 10 to 5 (`net accounts /minpwlen:12 /lockoutthreshold:5`)
+- [x] Verified system file integrity and practiced taking file ownership (`sfc /scannow`, `takeown /f`)
+- [x] Built a Linux to Windows command reference table covering users, permissions, processes, services, logs and packages
 
-Starting point for the whole lab. Set up an Oracle Cloud VPS, hardened SSH access by disabling password authentication and root login, changed the hostname, ran system updates, and initialised this GitHub repo. All subsequent Linux practice was done on this machine over SSH.
+## Technologies Used
 
-### [Users and Permissions](linux/users_and_perms/README.md)
+| Tool | Purpose | Evidence |
+|---|---|---|
+| OpenSSH | Key-only remote access to the VPS | [linux/](linux/README.md) |
+| useradd, chmod, chown, id, stat | User, group and permission management | [linux/users_and_perms/](linux/users_and_perms/README.md) |
+| grep, awk, sed, find | Text processing and SetUID audit | [linux/text_processing_and_sys_tools/](linux/text_processing_and_sys_tools/README.md) |
+| systemd, journalctl | Service management and log reading | [linux/services_and_logging/](linux/services_and_logging/README.md) |
+| df, du, dd, mkfs.ext4, swapon | Disk inspection, loop filesystem, swap | [linux/storage/](linux/storage/README.md) |
+| journalctl, awk, sort, uniq | Bruteforce attack audit | [linux/bruteforce_audit/](linux/bruteforce_audit/README.md) |
+| PowerShell 7, winget | Windows CLI and package management | [windows/](windows/README.md) |
+| Get-Process, Select-String, Get-CimInstance | Navigation, processes, system info | [windows/powershell_basics/](windows/powershell_basics/README.md) |
+| New-LocalUser, Add-LocalGroupMember | Local account management | [windows/local_user_management/](windows/local_user_management/README.md) |
+| icacls | NTFS permissions | [windows/package_management_and_permissions/](windows/package_management_and_permissions/README.md) |
+| Get-WinEvent, Event Viewer | Security event log auditing | [windows/event_logs/](windows/event_logs/README.md) |
+| net accounts, sfc, takeown | Password policy, integrity, ownership | [windows/policy_integrity_ownership/](windows/policy_integrity_ownership/README.md) |
 
-Created three user types with different privilege levels: a regular user, a sudoer, and a service account with `nologin` shell. Set up group-based file access and intentionally triggered `Permission denied` errors to observe the permission model working as intended. Also ran a system-wide SetUID audit to identify binaries running with elevated privileges.
+## Key Learnings
 
-Key tools: `useradd`, `usermod`, `groupadd`, `chmod`, `chown`, `su`, `id`, `stat`, `find -perm /4000`
+The error is the lesson. Seeing `Permission denied` after setting up a restricted file meant the access control was working, and that was easier to understand by triggering it on purpose than by reading about it. The bruteforce audit made the same point from the other side: the VPS was not advertised anywhere and bots were already hitting SSH within days, so hardening is not optional on anything internet-facing.
 
-### [Text Processing and System Tools](linux/text_processing_and_sys_tools/README.md)
+Linux and Windows solve the same problems with different tools. PowerShell pipelines pass objects instead of text, so each cmdlet can select properties directly rather than parsing strings. NTFS also supports explicit deny entries that override allows, while Linux permissions are purely additive. The command reference table in the policy lab maps the two side by side.
 
-Covered the core CLI tools for working with text output and system processes. Practiced building pipelines that chain multiple commands together to filter, transform, and extract data. Also wrote a small dated backup script using tar.
+## Files in This Directory
 
-Key tools: `ps`, `top`, `kill`, `pkill`, `nohup`, `grep`, `awk`, `sed`, `find`, `tar`, I/O redirection (`>`, `2>`, `<`)
-
-### [Services and Logging](linux/services_and_logging/README.md)
-
-Learned how systemd manages background services and built a custom one from scratch. The service runs a shell script that logs system health metrics every 60 seconds to a log file. Also covered journalctl for reading the systemd journal and filtering service-specific output.
-
-Key tools: `systemctl`, `journalctl`, `tee`, heredoc syntax, systemd unit file structure
-
-### [Storage](linux/storage/README.md)
-
-Covered disk space inspection, filesystem creation from scratch using a loop device, and swapfile setup. The loop device exercise was particularly useful since it walks through the full lifecycle of a filesystem (create, format, mount, use, unmount) entirely in software.
-
-Key tools: `df`, `du`, `dd`, `mkfs.ext4`, `mount`, `umount`, `fallocate`, `mkswap`, `swapon`, `/etc/fstab`
-
-### [Bruteforce Attack Audit](linux/bruteforce_audit/README.md)
-
-A consolidation exercise that applied journalctl, grep, and awk against real SSH attack traffic on the VPS. Sampled failed authentication attempts from the security journal and then extracted and deduplicated the attacking IPs using an awk loop. The server was not advertised anywhere and was already being hit by bots within days of setup.
-
-Key tools: `journalctl -p err`, `grep`, `awk`, `sort`, `uniq`
-
----
-
-## Windows
-
-### [Setup](windows/README.md)
-
-Installed PowerShell 7 (`pwsh.exe`) via winget rather than using the built-in Windows PowerShell 5.1. PowerShell 7 is the current cross-platform version and the one used by Azure and modern Microsoft tooling. Also set up a Windows 10 VM and Windows Server 2025 VM inside Hyper-V with an internal virtual switch for isolated lab networking.
-
-### [PowerShell Basics](windows/powershell_basics/README.md)
-
-Covered filesystem navigation, file creation and deletion, process management, and system information queries. A key thing learned here is that PowerShell pipelines pass objects rather than plain text, which means each cmdlet can inspect and select specific properties from what it receives rather than parsing string output.
-
-Key cmdlets: `Get-Location`, `Set-Location`, `Get-ChildItem`, `New-Item`, `Remove-Item`, `Get-Process`, `Stop-Process`, `Select-String`, `Get-CimInstance`, `Get-PSDrive`, `Get-ComputerInfo`
-
-### [Local User and Group Management](windows/local_user_management/README.md)
-
-Created local user accounts and groups through PowerShell, added users to groups, and practiced disabling and enabling accounts. Mirrors the Linux user management work but through the Windows local account model. Passwords must be passed as SecureString objects rather than plain text, which reflects how PowerShell handles sensitive data.
-
-Key cmdlets: `New-LocalUser`, `New-LocalGroup`, `Add-LocalGroupMember`, `Get-LocalUser`, `Get-LocalGroupMember`, `Disable-LocalUser`, `Enable-LocalUser`, `Remove-LocalUser`
-
-### [Package Management and File Permissions](windows/package_management_and_permissions/README.md)
-
-Used winget to search, install, and upgrade packages from the command line. Then practiced NTFS permission management using icacls, including granting group-level access with inheritance flags and adding explicit deny entries. The explicit deny concept is a meaningful difference from Linux, where permissions are purely additive.
-
-Key tools: `winget`, `icacls /grant`, `icacls /deny`, `Add-LocalGroupMember`
-
-### [Event Logs](windows/event_logs/README.md)
-
-Explored Windows event logs through both Event Viewer (GUI) and PowerShell. Learned the key Security event IDs for auditing purposes and used `Get-WinEvent` with `-FilterHashtable` to query the Security log efficiently. Exported filtered results to CSV for offline analysis.
-
-Key tools: `eventvwr.exe`, `Get-WinEvent`, `Export-CSV`, Security event IDs (4624, 4625, 4634, 4740)
-
-### [Password Policy, System Integrity and File Ownership](windows/policy_integrity_ownership/README.md)
-
-Used `net accounts` to view and harden local password and lockout policy. Ran `sfc /scannow` to verify system file integrity. Practiced taking ownership of files with `takeown` and then adjusting permissions with `icacls`. The section ends with a full Linux to Windows command reference table mapping equivalent tools across both operating systems.
-
-Key tools: `net accounts`, `sfc`, `DISM`, `takeown`
-
----
-
-## Linux vs Windows - Quick Reference
-
-A full comparison table is included in the [policy, integrity and ownership](windows/policy_integrity_ownership/README.md) section. The short version is that the concepts are identical across both OSes. The tools and syntax differ, but user management, permissions, process control, logging, and package management all exist on both sides.
-
----
-
-## What Comes Next
-
-The next phase covers networking fundamentals: IP addressing, subnetting, DNS, routing, firewalls, and packet analysis. The Hyper-V lab environment with the internal virtual switch is already set up and will be used for hands-on networking practice between the Windows 10 and Windows Server VMs.
+| Folder | Description |
+|---|---|
+| [linux/](linux/README.md) | Day 0 VPS setup, SSH hardening and repo initialisation |
+| [linux/users_and_perms/](linux/users_and_perms/README.md) | Users, groups, permissions and SetUID audit |
+| [linux/text_processing_and_sys_tools/](linux/text_processing_and_sys_tools/README.md) | Processes, grep/awk/sed, redirection, tar backup |
+| [linux/services_and_logging/](linux/services_and_logging/README.md) | Custom systemd service and journalctl |
+| [linux/storage/](linux/storage/README.md) | df/du, loop filesystem, swapfile |
+| [linux/bruteforce_audit/](linux/bruteforce_audit/README.md) | Extracting attacker IPs from the journal |
+| [windows/](windows/README.md) | PowerShell 7 setup |
+| [windows/powershell_basics/](windows/powershell_basics/README.md) | Navigation, processes, Select-String, system info |
+| [windows/local_user_management/](windows/local_user_management/README.md) | Local users and groups |
+| [windows/package_management_and_permissions/](windows/package_management_and_permissions/README.md) | winget and icacls |
+| [windows/event_logs/](windows/event_logs/README.md) | Event Viewer, Get-WinEvent, CSV export |
+| [windows/policy_integrity_ownership/](windows/policy_integrity_ownership/README.md) | net accounts, sfc, takeown, Linux vs Windows table |

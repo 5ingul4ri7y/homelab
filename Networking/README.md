@@ -1,235 +1,59 @@
-
-# Networking
-
-This phase covers practical networking from the ground up: how packets move,
-how names resolve, how traffic is inspected, and how to build real network
-services on a live VPS. Labs are split between Cisco Packet Tracer simulations
-and hands-on work on an Oracle Cloud VPS and real hardware.
-
----
-
-## Structure
-
-
-Networking/  
-├── lab_setup/  
-├── arp_lab/  
-├── routing_and_dhcp/  
-├── company_network_lab/  
-├── dns_lab/  
-├── dns_querying/  
-├── more_dns/  
-├── ping_traceroute_mtr/  
-├── ip_and_ss/  
-├── network_traffic_inspection/  
-├── wireguard_vpn/  
-└── squid_proxy/
-
-
----
-
-## Labs
-
-### [Lab Setup -- Router Workaround](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/lab_setup)
-
-The ISP-issued router has locked firmware with no access to DHCP reservations,
-DNS settings, or routing config. A spare TP-Link router was repurposed as a
-LAN-side lab device by connecting it via LAN-to-LAN ethernet and reassigning
-its admin IP to avoid a conflict with the main router. This gave full access
-to a configurable network device without needing new hardware.
-
----
-
-### [ARP Lab -- MAC vs IP, Switched LAN](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/arp_lab)
-
-**Tool:** Cisco Packet Tracer
-
-Observed ARP in a six-PC switched LAN. Watched the ARP cache start empty,
-populate after a ping, and used simulation mode to confirm that ARP runs
-before the first ICMP packet is ever sent. Demonstrated that ping does not
-start with ICMP -- it starts with ARP.
-
-Key concepts: ARP broadcasts vs unicast replies, dynamic cache entries, switch
-MAC address table learning, Layer 2 vs Layer 3 addressing.
-
----
-
-### [Routing and DHCP](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/routing_and_dhcp)
-
-**Tools:** Cisco Packet Tracer + real TP-Link hardware
-
-Configured a Cisco 1941 router from scratch in IOS: interface IPs, `no
-shutdown`, DHCP pools with excluded addresses, verified bindings with `show ip
-dhcp binding`. Replicated the same concepts on a real TP-Link router through
-its admin panel, observing live DHCP lease assignments on connected devices.
-
-Key concepts: router interfaces default to down, excluded addresses prevent
-conflicts, DHCP pools are per-subnet, `show` commands for verification.
-
----
-
-### [Company Network Capstone -- Subnetting, DHCP Server, DNS, Inter-subnet Routing](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/company_network_lab)
-
-**Tool:** Cisco Packet Tracer
-
-Capstone lab combining subnetting, centralised DHCP, DNS, and inter-subnet
-routing. Subnetted `192.168.10.0/24` into three department subnets of
-different sizes (two /26, one /27), configured a centralised DHCP and DNS
-server on the IT subnet, set up `ip helper-address` relay on the router so
-DHCP broadcasts from remote subnets reach the server, and verified cross-subnet
-DNS resolution from a MANAGEMENT PC to an IT-hosted internal domain.
-
-Key concepts: variable-length subnetting, centralised vs router-based DHCP,
-`ip helper-address` for cross-subnet DHCP relay, DNS across subnets.
-
----
-
-### [DNS Server Lab](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/dns_lab)
-
-**Tool:** Cisco Packet Tracer
-
-Set up a DNS server in Packet Tracer with A records and a CNAME alias,
-excluded the server IP from the DHCP pool, updated the DHCP pool to hand out
-the DNS server address, and verified resolution of all record types from client
-machines. Tested NXDOMAIN response for a nonexistent domain to confirm the
-server is properly authoritative.
-
-Key concepts: A records vs CNAME aliases, excluding static IPs from DHCP,
-DHCP and DNS dependency, `nslookup` as a verification tool.
-
----
-
-### [DNS Querying on Linux](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/dns_querying)
-
-**Environment:** Oracle Cloud VPS
-
-Practical DNS querying using `dig`, `host`, `nslookup`, and `resolvectl`.
-Queried A, MX, and NS records, used `@` to send queries directly to specific
-resolvers, ran `+trace` to watch the full recursive resolution chain from root
-servers down. Demonstrated `/etc/hosts` taking priority over DNS by overriding
-`google.com` to a fake IP and observing the effect on `dig`, `ping`, and
-`getent hosts`.
-
-Key concepts: DNS record types, stub resolver vs authoritative server, hosts
-file priority, systemd-resolved, TTL and caching, `resolvectl flush-caches`.
-
----
-
-### [DNS Providers and Resolution Order](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/more-dns)
-
-**Environment:** Oracle Cloud VPS
-
-Compared query latency across Google (8.8.8.8), Cloudflare (1.1.1.1), and
-Quad9 (9.9.9.9) using a shell script with `dig`. Tested Quad9's malicious
-domain blocking by querying a known threat domain and observing NXDOMAIN.
-Documented the full OS-level DNS resolution order (hosts file, local cache,
-configured resolver) and built a six-step DNS failure diagnosis playbook.
-
-Key concepts: DNS resolution order, provider differences, Quad9 threat
-blocking, `resolvectl status`, systematic DNS troubleshooting.
-
----
-
-### [Ping, Traceroute, and MTR](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/ping_traceroute_mtr)
-
-**Environment:** Oracle Cloud VPS
-
-Used `ping` for connectivity testing and latency comparison across DNS
-resolvers using `awk` to extract timing fields. Used `traceroute` to map the
-path to google.com and observed silent hops. Used `mtr` in both interactive
-and report modes to collect per-hop statistics. Demonstrated the difference
-between real packet loss and ICMP de-prioritization by intermediate routers.
-
-Key concepts: ICMP echo, TTL-based path discovery, MTR columns (Loss%, StDev,
-Wrst), intermediate hop loss vs end-to-end loss.
-
----
-
-### [ip and ss](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/ip_and_ss)
-
-**Environment:** WSL Ubuntu (to avoid locking out the VPS)
-
-Used `ip addr`, `ip link`, and `ip route` to inspect interfaces, MAC
-addresses, and the kernel routing table. Used `ip route get` to ask the kernel
-exactly which route it would use for a specific destination. Used `ss -tuln`
-to list listening TCP and UDP ports and `ss -tulnp` with sudo to identify the
-process behind each socket.
-
-Key concepts: Layer 2 vs Layer 3 interface info, routing table lookup, socket
-statistics, identifying services by port.
-
----
-
-### [Network Traffic Inspection -- curl, wget, tcpdump](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/network_traffic_inspection)
-
-**Environment:** Oracle Cloud VPS
-
-Used `curl` to fetch pages, save output, retrieve headers only with `-I`, and
-trace the full TLS handshake with `-v`. Used `tcpdump` to capture HTTP traffic
-on port 80 and read a complete server response in plaintext -- a direct
-demonstration of why HTTPS is not optional. Captured DNS traffic on port 53 in
-real time while running `dig` in a second terminal, and saved a packet capture
-to a `.pcap` file for Wireshark analysis.
-
-Key concepts: HTTP HEAD requests, curl verbose output (`*`, `>`, `<` prefixes),
-plaintext HTTP exposure, DNS as observable UDP traffic, pcap files.
-
----
-
-### [WireGuard VPN](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/wireguard_vpn)
-
-**Environment:** Oracle Cloud VPS (server), Windows PC and Android phone (clients)
-
-Built a full WireGuard VPN server on the VPS routing all client traffic
-through it. Configured Oracle Cloud's two-tier firewall (OCI Network Security
-Group and OS-level iptables) to allow UDP 51820. Generated key pairs,
-configured the server with PostUp NAT and forwarding rules, and connected a
-Windows client via the WireGuard desktop app and an Android phone via QR code.
-Verified both clients simultaneously with `sudo wg show` showing two active
-handshakes.
-
-Encountered and resolved a post-handshake no-internet issue caused by Oracle's
-default iptables FORWARD chain REJECT rule sitting above the ACCEPT rule added
-by WireGuard's PostUp. Fix was inserting ACCEPT rules at position 1 with
-`-I FORWARD 1` instead of appending with `-A`. Full incident log documented
-for post-mortem.
-
-Key concepts: WireGuard cryptography (ChaCha20, Diffie-Hellman), UDP-only
-transport, public/private key peer authentication, NAT masquerade, iptables
-rule ordering, QR code peer provisioning.
-
----
-
-### [Squid Forward Proxy](https://github.com/5ingul4ri7y/homelab/tree/main/Networking/squid_proxy)
-
-**Environment:** Oracle Cloud VPS (proxy server), Windows PC (client)
-
-Deployed Squid as a forward proxy on the VPS, wrote a minimal config from
-scratch restricting access to the VPN subnet and a specific PC IP. Configured
-Oracle Cloud's two-tier firewall for TCP port 3128 -- NSG ingress rule locked
-to the PC's /32 and an iptables INPUT rule for the same source. Connected
-Windows via system proxy settings and verified all browser traffic was exiting
-through the VPS. Monitored the Squid access log in real time with `tail -f`
-and observed live proxied requests with full method, destination, and status
-code visible per line.
-
-Key concepts: forward vs reverse vs transparent proxy, ACL-based access
-control, proxy-specific firewall scoping, Squid access log format, two-tier
-firewall architecture on OCI.
-
----
-
-## Environment Summary
-
-| Environment | Used For |
-|-------------|----------|
-| Cisco Packet Tracer | ARP, routing, DHCP, DNS server, subnetting labs |
-| Oracle Cloud VPS (Ubuntu 24.04) | DNS querying, ping/traceroute/mtr, ip/ss, curl/tcpdump, WireGuard server, Squid proxy |
-| WSL Ubuntu | ip and ss lab (safe alternative to running on live VPS) |
-| TP-Link router (real hardware) | DHCP observation, router admin panel |
-| Windows 10 (local machine) | WireGuard client, Squid browser proxy, PowerShell verification |
-| Android phone | WireGuard client via QR code |
-
-
----
-
+# Phase 2 - Networking: From Packets to Services
+
+## What I Built
+
+A set of networking labs split across Cisco Packet Tracer, real hardware and an Oracle Cloud VPS: a switched LAN and a routed three-department company network (centralised DHCP and DNS), a spare TP-Link router turned into a configurable LAN lab device, Linux DNS and traffic inspection work, a WireGuard VPN server with two clients, and a Squid forward proxy locked to a single source IP.
+
+## Key Accomplishments
+
+- [x] Worked around an ISP-locked router by connecting a spare TP-Link LAN-to-LAN and moving its admin IP from `192.168.1.1` to `192.168.1.2` to avoid a conflict
+- [x] Proved ping starts with ARP, not ICMP: empty cache, then `arp -a` showing a dynamic entry after the ping, with Simulation mode showing the ARP broadcast at t=150.025 and the first ICMP packet at t=150.029
+- [x] Configured a Cisco 1941 from scratch in IOS (interfaces, `no shutdown`, DHCP pools, excluded addresses) and verified it with `show ip dhcp binding`, then repeated the same DHCP concepts on the real TP-Link router
+- [x] Subnetted `192.168.10.0/24` into two /26 subnets and one /27, with a centralised DHCP and DNS server reached across subnets via `ip helper-address 192.168.10.70`
+- [x] Verified cross-subnet DNS resolution of `intranet.company.local` from a MANAGEMENT PC (`nslookup`)
+- [x] Built a Packet Tracer DNS server with A records and a CNAME, and confirmed an NXDOMAIN for a nonexistent name (`nslookup doesntexist.lab`)
+- [x] Queried A, MX and NS records, traced recursive resolution from the root servers (`dig +trace google.com`), and proved `/etc/hosts` overrides DNS by pointing `google.com` at a fake IP
+- [x] Compared Google, Cloudflare and Quad9 resolvers with a `dig` loop (3 ms vs 2 ms vs 2 ms from the VPS) and wrote a six-step DNS failure diagnosis playbook
+- [x] Told real packet loss from ICMP de-prioritisation with `mtr -n --report --report-cycles 10` (90% and 20% loss at intermediate hops, 0% at the destination)
+- [x] Captured plaintext HTTP and live DNS queries with `sudo tcpdump -i ens3 -n -A port 80` and `port 53`, and saved a `.pcap` for Wireshark
+- [x] Deployed a WireGuard server on the VPS and connected a Windows PC and an Android phone at the same time (`sudo wg show` showed two active handshakes)
+- [x] Fixed a post-handshake no-internet failure caused by Oracle's default FORWARD REJECT rule sitting above the ACCEPT rule, by inserting the rules at the top with `-I FORWARD 1` (see [post-mortem](../Post_Mortems/postmortem_wireguard_forward_chain.md))
+- [x] Deployed Squid as a forward proxy with a minimal from-scratch config, ACL-restricted to the VPN subnet and one PC, with an OCI NSG rule locked to that PC's /32
+
+## Technologies Used
+
+| Tool | Purpose | Evidence |
+|---|---|---|
+| Cisco Packet Tracer | ARP, routing, DHCP, DNS and subnetting simulations | [arp_lab/](arp_lab/README.md), [routing_and_dhcp/](routing_and_dhcp/README.md), [company_network_lab/](company_network_lab/README.md), [dns_lab/](dns_lab/README.md) |
+| Cisco IOS CLI | Router interfaces, DHCP pools, DHCP relay | `.pkt` files in each lab's `assets/` |
+| TP-Link router | Real-hardware DHCP and a configurable lab device | [lab_setup/](lab_setup/README.md) |
+| dig, host, nslookup, resolvectl | DNS querying and resolver inspection | [dns_querying/](dns_querying/README.md), [more-dns/](more-dns/README.md) |
+| ping, traceroute, mtr | Connectivity, path discovery, loss analysis | [ping_traceroute_mtr/](ping_traceroute_mtr/README.md) |
+| ip, ss | Interfaces, routing table, listening sockets | [ip_and_ss/](ip_and_ss/README.md) |
+| curl, wget, tcpdump | HTTP inspection and packet capture | [network_traffic_inspection/](network_traffic_inspection/README.md) |
+| WireGuard | VPN server with Windows and Android clients | [wireguard_vpn/](wireguard_vpn/README.md) |
+| Squid | Forward proxy with ACLs and access logging | [squid_proxy/](squid_proxy/README.md) |
+| OCI NSG and iptables | Two-tier cloud and OS firewalling | [wireguard_vpn/](wireguard_vpn/README.md), [squid_proxy/](squid_proxy/README.md) |
+
+## Key Learnings
+
+Troubleshooting works best from the bottom of the stack up. ARP has to succeed before ICMP can be sent, and the DNS failure playbook starts by pinging a raw IP before blaming DNS. The same idea showed up in MTR: loss at one intermediate hop means nothing if the destination shows 0%, because routers often de-prioritise ICMP while still forwarding real traffic.
+
+Oracle Cloud has two independent firewalls (the NSG in the cloud and iptables in the OS), and a rule in one does nothing for the other. The WireGuard incident also showed that iptables order matters: an ACCEPT rule appended below a REJECT is never reached. Finally, `tcpdump` on port 80 showed a full server response in plaintext, which made the case for HTTPS better than any explanation.
+
+## Files in This Directory
+
+| Folder | Description |
+|---|---|
+| [lab_setup/](lab_setup/README.md) | TP-Link LAN-to-LAN workaround for the ISP-locked router |
+| [arp_lab/](arp_lab/README.md) | ARP cache and simulation-mode event list in a switched LAN |
+| [routing_and_dhcp/](routing_and_dhcp/README.md) | Cisco 1941 routing and DHCP, plus real TP-Link DHCP |
+| [company_network_lab/](company_network_lab/README.md) | Capstone: subnetting, central DHCP and DNS, helper-address relay |
+| [dns_lab/](dns_lab/README.md) | Packet Tracer DNS server with A and CNAME records |
+| [dns_querying/](dns_querying/README.md) | dig, host, nslookup, resolvectl and the hosts file override |
+| [more-dns/](more-dns/README.md) | Resolver comparison, resolution order, DNS failure playbook |
+| [ping_traceroute_mtr/](ping_traceroute_mtr/README.md) | Latency, path mapping and reading MTR loss correctly |
+| [ip_and_ss/](ip_and_ss/README.md) | Interfaces, routes and listening sockets (done on WSL) |
+| [network_traffic_inspection/](network_traffic_inspection/README.md) | curl, wget and tcpdump captures |
+| [wireguard_vpn/](wireguard_vpn/README.md) | WireGuard server, two clients, FORWARD chain fix |
+| [squid_proxy/](squid_proxy/README.md) | Squid forward proxy with two-tier firewall scoping |

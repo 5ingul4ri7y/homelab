@@ -86,7 +86,7 @@ grep "Hardening index" ~/lynis_end_phase3.report
 
 Hardening index came back at 69, up from 66 at the earlier baseline, out of 270 tests performed. Firewall detected and active, malware scanner still not installed, which is the same gap flagged in the baseline and is deferred to the Security phase along with the rest of the suggestions list.
 
-Full scan output for this run is in [lynis_end_phase3](https://github.com/5ingul4ri7y/homelab/tree/main/Audits_and_Reports/lynis_end_phase3), and the earlier baseline it is being compared against is in [lynis_mid_phase3](https://github.com/5ingul4ri7y/homelab/tree/main/Audits_and_Reports/lynis_mid_phase3), if you want to see the two side by side rather than take my word for the delta.
+Full scan output for this run is in [lynis_end_phase3](../../Audits_and_Reports/lynis_end_phase3/README.md), and the earlier baseline it is being compared against is in [lynis_mid_phase3](../../Audits_and_Reports/lynis_mid_phase3/README.md), if you want to see the two side by side rather than take my word for the delta.
 
 ## Summary
 

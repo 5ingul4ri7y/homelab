@@ -4,7 +4,7 @@
 
 A public-facing web stack on Oracle Cloud (Nginx reverse proxy with Let's Encrypt TLS in front of two Dockerized Apache backends, one on a second VPS locked to the first VPS's IP) with hardened SSH, layered OCI and host firewalls, BIND9 and WireGuard-aware DNS, and offsite rsync backups. Alongside it, a Hyper-V network ("Internal-LAN") with a Windows Server 2022 Active Directory domain (`corp.lab`) and a domain-joined Windows 10 client, plus Ubuntu VMs running DNS, DHCP, HAProxy, Samba, NFS and FTP labs. The phase ended with a port-by-port audit of the VPS and a Lynis re-measurement.
 
-![Homelab Architecture - End of Phase 3](assets/architecture-diagram.webp)
+![Homelab Architecture - End of Phase 3](assets/architecture-diagram.png)
 
 ## Key Accomplishments
 

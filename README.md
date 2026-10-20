@@ -48,7 +48,7 @@ All four phases are complete. Each phase README links to the individual labs and
 
 ## Architecture
 
-![Homelab architecture, end of Phase 3](assets/homelab-architecture.webp)
+![Homelab architecture, end of Phase 4](assets/homelab-architecture.png)
 
 The lab has two environments:
 

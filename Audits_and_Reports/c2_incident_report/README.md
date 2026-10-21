@@ -62,7 +62,7 @@ A fuller, blameless discussion is in the post-mortem.
 
 ## 5. Response Actions Taken
 
-**Containment:** blocked the C2 address with `sudo ufw deny out to 203.0.113.25`, before killing anything so the evidence was preserved.
+**Containment:** blocked the C2 address with `sudo ufw deny out to 203.0.113.25` and left both processes running until the evidence was collected, so nothing was destroyed. In this simulation the rule would not have cut the connection itself, because the fake C2 sits on the loopback interface and the connection was already established (see the incident response lab).
 
 **Evidence:** attached `strace` to both processes (`sudo strace -p 2425 -e trace=network &` and the same for 2408), saved `sudo lsof -p 2408` to `/tmp/ir-lsof-evidence.txt` and `/proc/2408/maps` to `/tmp/ir-maps-evidence.txt`, inspected `/proc/PID/cmdline`, `/proc/PID/status` and `lsof -p 2425`, and hashed the script with `sha256sum /tmp/.sysupdate.py`.
 

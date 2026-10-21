@@ -6,7 +6,7 @@ This assessment covers the Oracle Cloud VPS running Ubuntu 24.04 that hosts my h
 
 **Overall Risk Rating: MEDIUM** Critical findings: 0 | High: 0 | Medium: 3 | Low: 5
 
-**Scope and method.** In scope are the VPS operating system, the services it exposes (nginx, ModSecurity, SSH) and the security tooling running on it. Out of scope are my Oracle Cloud account, my home network and admin workstation (except where they affect the risk to the VPS), and my other cloud instances. The findings come from the Lynis audits (baseline of 68 with 269 tests performed, then 82 after the hardening sprint), the VPS port audit from the Sysadmin phase, my testing of Suricata, ModSecurity and auditd during the Security phase, the incident response simulation, and manual review. Risk is scored as Likelihood x Impact on a 1 to 5 scale. A score of 1 to 5 is Low, 6 to 11 is Medium, 12 to 19 is High and 20 to 25 is Critical.
+**Scope and method.** In scope are the VPS operating system, the services it exposes (nginx, ModSecurity, SSH and WireGuard) and the security tooling running on it. Out of scope are my Oracle Cloud account, my home network and admin workstation (except where they affect the risk to the VPS), and my other cloud instances. The findings come from the Lynis audits (baseline of 68 with 269 tests performed, then 82 after the hardening sprint), the VPS port audit from the Sysadmin phase, my testing of Suricata, ModSecurity and auditd during the Security phase, the incident response simulation, and manual review. Risk is scored as Likelihood x Impact on a 1 to 5 scale. A score of 1 to 5 is Low, 6 to 11 is Medium, 12 to 19 is High and 20 to 25 is Critical.
 
 ## 2. Assets Being Protected
 

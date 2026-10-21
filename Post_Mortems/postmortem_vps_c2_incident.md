@@ -61,7 +61,7 @@ In a production environment this would be a host with an active command and cont
 
 Verified by the `kill` commands succeeding, strace reporting both processes killed by SIGKILL and both strace jobs ending, no persistence found, and the audit report ending with only my own cleanup commands.
 
-**What worked well:** Suricata alerted within seconds of the connection. `ss`, `ps`, `/proc` and `lsof` quickly tied the connection to the exact processes and scripts. Blocking the address before killing the processes meant the evidence was preserved. The auditd setup from the hardening sprint gave me an audit trail to review afterwards.
+**What worked well:** Suricata alerted within seconds of the connection. `ss`, `ps`, `/proc` and `lsof` quickly tied the connection to the exact processes and scripts. Leaving the processes running until the evidence was collected meant nothing was destroyed. The UFW block would not have cut this particular connection (loopback, already established), which is a limit of the simulation. The auditd setup from the hardening sprint gave me an audit trail to review afterwards.
 
 ## 6. Prevention
 

@@ -131,7 +131,7 @@ bantime = -1
 
 **findtime = 600** -- The window is 600 seconds (10 minutes). The retry counter resets if no failures occur within this window.
 
-**bantime = -1** -- A value of -1 means the ban is permanent. The IP is never automatically unbanned. This is appropriate for a homelab VPS that has no legitimate reason to accept repeated failed logins from unknown IPs.
+**bantime = -1** -- A value of -1 means the ban is permanent. The IP is never automatically unbanned. This is appropriate for a homelab VPS that has no legitimate reason to accept repeated failed logins from unknown IPs. The trade-off is that permanent bans pile up over time and could lock out my own address if it were ever banned by mistake. A finite `bantime` combined with `ignoreip` for my own address is the safer long-term setup.
 
 ### Enabling the Service
 

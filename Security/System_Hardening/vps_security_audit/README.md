@@ -36,7 +36,7 @@ Inspecting the HTTP response headers (`curl -I https://sohaib-lab.duckdns.org`) 
 
 ## Lynis Score Progression
 
-I ran Lynis one final time and compared the scores. My scores went from 66 at the baseline (mid phase 3), to 69 at the end of phase 3, to 68 at the start of phase 4 (a one point dip caused by postfix, which was installed as a dependency of rkhunter, was not needed on this server and was not hardened out of the box, and fixed in the hardening sprint), to 82 in the final run, a total gain of 16 over the baseline. This chart shows the hardening journey:
+I ran Lynis one final time and compared the scores. My scores went from 66 at the baseline (mid phase 3), to 69 at the end of phase 3, to 68 at the start of phase 4 (a one point dip caused by postfix, which rkhunter installed as a dependency; it was not needed on this server, was not hardened out of the box, and was fixed in the hardening sprint), to 82 in the final run, a total gain of 16 over the baseline. This chart shows the hardening journey:
 
 ![Lynis hardening index score progression](assets/lynis_chart.png)
 

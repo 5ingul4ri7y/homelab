@@ -17,6 +17,7 @@ The Lynis hardening index went from 66 at baseline to 69 at the end of Phase 3, 
 | Check | Result |
 |-------|--------|
 | Open TCP ports (nmap service scan from Kali) | 2222 (SSH, non-standard port), 80 (HTTP), 443 (HTTPS) |
+| Open UDP port | 51820 (WireGuard), open to the internet by design. WireGuard does not answer unauthenticated packets |
 | SSH banner | OpenSSH version is shown, but the OS and build details that are normally present in the banner are hidden |
 | TLS certificate | Valid |
 | HTTP on port 80 | Redirects all requests to HTTPS |

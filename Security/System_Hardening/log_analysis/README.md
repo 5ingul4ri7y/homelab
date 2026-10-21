@@ -16,7 +16,7 @@ I ran the command and saved the output for intelligence extraction in a file (`a
 
 ![Total number of attack attempts](assets/log_analysis3.png)
 
-Firstly, I checked how many attacks there have been in total, which came to 474,952. My VPS is about 6 months old and no logs have been lost, so this shows all the attacks during this period.
+Firstly, I checked how many attacks there have been in total, which came to 474,952. My VPS is about 5 months old and no logs have been lost, so this shows all the attacks during this period.
 
 ![Invalid usernames versus actual usernames](assets/log_analysis4.png)
 

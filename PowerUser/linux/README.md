@@ -6,11 +6,11 @@
 - Changed hostname to my preference
 - Ran system updates
 - Initialised homelab GitHub repo
-- Hardened SSH by changning settings in /etc/ssh/sshd_config to be strict i.e max 3 attempts, no root login and no x11 aforwarding
+- Hardened SSH by changing settings in /etc/ssh/sshd_config to be strict i.e max 3 attempts, no root login and no X11 forwarding
 
 ## Key commands used
 - ssh -i ~/.ssh/oracle_key ubuntu@x.x.x.x
-- sudo hostnamectl set-hostname labserver
+- sudo hostnamectl set-hostname <your-hostname>
 - sudo apt update && sudo apt upgrade -y
 
 

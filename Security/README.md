@@ -30,7 +30,7 @@ A defence-in-depth setup for the Oracle VPS and the Hyper-V lab: Suricata IDS wi
 - [x] Hardened the kernel through `/etc/sysctl.d/99-hardening.conf` (SYN cookies, reverse path filtering, no ICMP redirects or source routing, `kptr_restrict`, `bpf_jit_harden`, ASLR)
 - [x] Disabled unused filesystem modules and `usb-storage`, and configured `unattended-upgrades` with ESM channels and manual reboots
 - [x] Installed ModSecurity with the OWASP CRS on nginx, caught SQLi, XSS and path traversal in DetectionOnly mode (rule 942100, anomaly score 5), then switched to `SecRuleEngine On` and saw the same requests return 403
-- [x] Analysed the journal's attack history: 474,952 failed SSH attempts from 4,123 unique IPs over about six months, then automated a daily 6:00 AM summary report with cron
+- [x] Analysed the journal's attack history: 474,952 failed SSH attempts from 4,123 unique IPs over about five months, then automated a daily 6:00 AM summary report with cron
 
 **Incident response and audit**
 - [x] Built and ran a simulated C2 incident (fake listener and "malware" on a TEST-NET-3 address) and responded in order: identify (`ss`, `/proc`, `lsof`), contain (`ufw deny out`, `strace`, evidence files), eradicate (persistence checks, `kill`, `rm`), recover (rkhunter, `aureport`) - see the [incident report](../Audits_and_Reports/c2_incident_report/README.md), [post-mortem](../Post_Mortems/postmortem_vps_c2_incident.md) and [risk assessment](../Audits_and_Reports/risk_assessment_vps/README.md)

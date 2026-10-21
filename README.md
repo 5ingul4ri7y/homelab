@@ -22,7 +22,7 @@ Short on time? These three documents show how I work best:
 | **Interactive architecture** | [architecture diagram](https://sohaib-lab.duckdns.org/architecture-diagram.html) |
 | **Lynis hardening score** | 66 at baseline, 69 after Phase 3, 68 at the start of Phase 4 (unhardened postfix pulled in by rkhunter), **82/100** at the end (target was 80+) |
 | **External scan from Kali** | Only 3 TCP ports reachable: SSH (non-standard port), HTTP and HTTPS. WireGuard listens on UDP 51820 by design |
-| **Attack data analysed** | 474,952 failed SSH attempts from 4,123 unique IPs over about six months |
+| **Attack data analysed** | 474,952 failed SSH attempts from 4,123 unique IPs over about five months |
 | **Incident work** | 4 post-mortems, a simulated C2 incident with full response, and a formal risk assessment |
 | **Certifications** | Google IT Support Professional Certificate, Cisco Networking Basics |
 

@@ -31,11 +31,11 @@ winget install Microsoft.Powershell
 
 The executable for PowerShell 7 is `pwsh.exe`, as opposed to `powershell.exe` for the older 5.1. That distinction matters when scripting or setting default terminals since both versions can coexist on the same machine. The new prompt confirms it is running the cross-platform version.
 
-All upcoming Windows command-line labs will be done in this version.
+All Windows command-line labs in this phase were done in this version.
 
 ---
 
 ## Environment
 
-- **Daily machine:** Windows 10 (fully updated)
-- **Planned VM setup:** For infrastructure topics like Active Directory and Group Policy, I will create Windows and Windows Server VMs inside VirtualBox rather than touching the host system  
+- **Daily machine:** Windows 10 for the labs in this phase, upgraded to the latest Windows 11 partway through Phase 3
+- **VM setup:** For infrastructure topics like Active Directory and Group Policy, I used Windows and Windows Server VMs inside Hyper-V rather than touching the host system

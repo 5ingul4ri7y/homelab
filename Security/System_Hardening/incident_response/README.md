@@ -10,7 +10,7 @@ Suricata was already running on the VPS from the earlier labs, with the loopback
 
 ![detection rule written to local.rules](assets/incident1.png)
 
-I started with the detection side, a custom Suricata rule that alerts on any TCP traffic going to the C2 address:
+I started with the detection side. The learning rules from the custom rules lab had already been removed, so this was the only custom rule added for the simulation. It alerts on any TCP traffic going to the C2 address:
 
 ```
 sudo tee /var/lib/suricata/rules/local.rules <<'EOF'
@@ -163,7 +163,7 @@ I did not kill anything yet. Killing the process first would destroy the evidenc
 sudo ufw deny out to 203.0.113.25
 ```
 
-This is the step that would cut off the channel to a real C2 server.
+This is the step that would cut off the channel to a real C2 server. One caveat for this simulation: the fake C2 lives on the loopback interface and the connection was already ESTABLISHED, and UFW's default rules in `before.rules` accept loopback and established traffic ahead of user rules, so this rule would not have cut this particular connection. Against a real remote C2 it blocks new connections, but ending a connection that is already open also needs the process to be killed or the connection state to be cleared.
 
 ![open files evidence for the listener](assets/incident9.png)
 

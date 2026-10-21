@@ -12,11 +12,11 @@ Over about five months (since May 2026) I built, broke, fixed and documented a r
 |---|---|
 | **Live site** | [sohaib-lab.duckdns.org](https://sohaib-lab.duckdns.org) (nginx reverse proxy, Let's Encrypt TLS, ModSecurity WAF) |
 | **Interactive architecture** | [architecture diagram](https://sohaib-lab.duckdns.org/architecture-diagram.html) |
-| **Lynis hardening score** | 66 at baseline, 69 after Phase 3, **82/100** at the end (target was 80+) |
+| **Lynis hardening score** | 66 at baseline, 69 after Phase 3, 68 at the start of Phase 4 (unhardened postfix pulled in by rkhunter), **82/100** at the end (target was 80+) |
 | **External scan from Kali** | Only 3 TCP ports reachable: SSH (non-standard port), HTTP and HTTPS |
 | **Attack data analysed** | 474,952 failed SSH attempts from 4,123 unique IPs over about six months |
 | **Incident work** | 4 post-mortems, a simulated C2 incident with full response, and a formal risk assessment |
-| **Certification** | Google IT Support Professional Certificate |
+| **Certifications** | Google IT Support Professional Certificate, Cisco Networking Basics |
 
 ## Phases
 
@@ -45,6 +45,21 @@ All four phases are complete. Each phase README links to the individual labs and
 | Incident response | Simulated C2 incident, post-mortems, risk assessment | [Phase 4](Security/README.md), [Post-Mortems](Post_Mortems/README.md) |
 | Automation | Bash scripts, cron, rsync backups with restore test, daily attack summary report | [Phase 3](Sysadmin_Infrastructure/README.md), [Phase 4](Security/README.md) |
 | Documentation | Every lab verified with evidence, failures written up as post-mortems | whole repo |
+
+## How This Maps to Cloud Work
+
+This is a concept mapping from what I built to the cloud services it corresponds to. I have not worked in AWS yet, and the AWS series below is where I will do that.
+
+| What I built here | Cloud equivalent |
+|---|---|
+| OCI network security groups layered with UFW and iptables | Security groups and network ACLs combined with host firewalls |
+| Least privilege on users, sudo, ACLs and PAM policy | IAM roles and least-privilege policies |
+| auditd, Suricata, ModSecurity logs and the daily attack summary | Cloud audit logging, monitoring and threat detection |
+| unattended-upgrades, patch priorities and Lynis audits | Patch management and configuration compliance checks |
+| nginx and HAProxy reverse proxying with health checks and failover | Application and network load balancers |
+| WireGuard VPN and a back-end reachable only from VPS 1 | VPNs and private subnets |
+| rsync backup to a second server with a restore test | Snapshots, object storage backups and restore testing |
+| Post-mortems and the VPS risk assessment | Incident response and risk review |
 
 ## Architecture
 

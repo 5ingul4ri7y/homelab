@@ -2,7 +2,7 @@
 
 ## What I Built
 
-A hardened Ubuntu 24.04 VPS on Oracle Cloud (key-only SSH, no root login) used for all Linux practice, plus a local Windows 10 machine and Hyper-V VMs (Windows 10 and Windows Server 2025 on an internal virtual switch) used for PowerShell practice. Everything was done from the terminal, with the goal of understanding what the OS is doing rather than memorising commands.
+A hardened Ubuntu 24.04 VPS on Oracle Cloud (key-only SSH, no root login) used for all Linux practice, plus a local Windows machine (Windows 10 at the time, upgraded to Windows 11 during Phase 3) and Hyper-V VMs (Windows 10 and Windows Server 2022 on an internal virtual switch) used for PowerShell practice. Everything was done from the terminal, with the goal of understanding what the OS is doing rather than memorising commands.
 
 ## Key Accomplishments
 

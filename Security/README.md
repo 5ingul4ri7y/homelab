@@ -17,7 +17,7 @@ A defence-in-depth setup for the Oracle VPS and the Hyper-V lab: Suricata IDS wi
 
 **Network security**
 - [x] Installed Suricata in IDS mode with the Emerging Threats ruleset (52,828 rules loaded, 0 failed) and triggered my first alert with `curl http://testmyids.com`
-- [x] Wrote three custom rules (access to `/secret`, SYN scan threshold, outbound traffic to a suspicious range) and confirmed each in `fast.log`
+- [x] Wrote three custom learning rules (access to `/secret`, SYN scan threshold, outbound traffic to a suspicious range), tested two of them in `fast.log` (the `/secret` rule and the suspicious-range rule), and removed them afterwards
 - [x] Monitored the VPS with Netdata (reached through SSH port forwarding, never exposed publicly) and vnstat
 - [x] Put pfSense on Hyper-V and routed selected VMs through it by setting it as their gateway (`ip route add default via 192.168.50.4`)
 - [x] Applied ACLs with `setfacl` (including a default ACL and the effective-permission mask) and checked least privilege on live `sshd` and `nginx` processes

@@ -8,7 +8,9 @@ This document describes the security controls implemented on my Oracle Cloud VPS
 
 **Overall security posture: GOOD - Lynis score 82/100**
 
-The Lynis hardening index went from 66 at baseline to 69 before the hardening sprint and 82 at the final audit, against a target of 80 or more. On my own scale, 80 to 90 is serious hardening effort. An external scan from Kali confirmed the result from an attacker's point of view: only three TCP ports are reachable (SSH on a non-standard port, HTTP and HTTPS), the SSH banner shows the OpenSSH version but hides the OS, the web server leaks no version information, and all HTTP requests are redirected to HTTPS. The main gaps that remain are logs that only exist on the server itself, a single factor on SSH, and backups that only cover configuration. The risk assessment rates the overall residual risk as MEDIUM.
+GOOD describes how strong the controls in place are. The MEDIUM residual risk in the risk assessment describes what is still exposed after those controls, so the two ratings do not conflict.
+
+The Lynis hardening index went from 66 at baseline to 69 at the end of Phase 3, dipped to 68 when rkhunter pulled in an unhardened postfix dependency, and reached 82 at the final audit after the hardening sprint fixed it, against a target of 80 or more. On my own scale, 80 to 90 is serious hardening effort. An external scan from Kali confirmed the result from an attacker's point of view: only three TCP ports are reachable (SSH on a non-standard port, HTTP and HTTPS), the SSH banner shows the OpenSSH version but hides the OS, the web server leaks no version information, and all HTTP requests are redirected to HTTPS. The main gaps that remain are logs that only exist on the server itself, a single factor on SSH, and backups that only cover configuration. The risk assessment rates the overall residual risk as MEDIUM.
 
 ## Latest Audit Results
 
@@ -19,7 +21,7 @@ The Lynis hardening index went from 66 at baseline to 69 before the hardening sp
 | TLS certificate | Valid |
 | HTTP on port 80 | Redirects all requests to HTTPS |
 | Response headers | No nginx version leaked, X-Frame-Options and Strict-Transport-Security set, other required security headers present |
-| Lynis hardening index | 66 baseline, 69 before the hardening sprint, 82 final (target 80+) |
+| Lynis hardening index | 66 baseline, 69 end of Phase 3, 68 before the hardening sprint (unhardened postfix), 82 final (target 80+) |
 
 ## 1. Perimeter Controls
 
@@ -73,13 +75,13 @@ The Lynis hardening index went from 66 at baseline to 69 before the hardening sp
 - **No SIEM or central logging.** All logs only exist on the VPS, so someone with root could alter or delete them. The SIEM architecture is documented but not deployed. Planned: ship logs to a second system in real time.
 - **Kernel updates need a manual reboot.** Planned: a regular reboot window, or kernel live patching if it is available.
 - **SSH depends on a single factor.** Anyone holding my private key has a way in. Planned: add a TOTP second factor.
-- **Suricata is detection only, with thin custom rules.** The only custom rule loaded is the C2 address rule, and it has no `classtype` or priority. Planned: add a classtype to the C2 rule, re-add the earlier custom rules under unique SIDs, and consider IPS mode only after tuning.
+- **Suricata is detection only.** It alerts but does not block, and the C2 address rule has no `classtype` or priority. Planned: add a classtype to the C2 rule and consider IPS mode only after tuning.
 - **auditd rule set is minimal.** Not yet watched: /etc/group, /etc/gshadow, /etc/sudoers.d/, auth.log tampering and time changes. Planned: extend the rules and keep an eye on audit log size.
 - **WAF is at the default CRS paranoia level and untuned.** Planned: review the logs for false positives and try a higher paranoia level.
 - **Backups are configuration-only.** Accepted for now because the server only holds lab material. Planned: a full snapshot and a tested restore.
 - **Dependency on DuckDNS.** The site lives on a free dynamic DNS subdomain, so an outage or loss of the account token takes the site offline or lets someone repoint it.
 - **Lynis score of 82 out of 100.** Some suggestions are still open and tracked through periodic audits.
-- **Trust assumptions I accept:** Oracle for the hardware, hypervisor and console, the Ubuntu repositories, the third-party Suricata PPA and Let's Encrypt for updates and certificates, and my own admin machine (Windows 10, out of mainstream support) as the way into the server.
+- **Trust assumptions I accept:** Oracle for the hardware, hypervisor and console, the Ubuntu repositories, the third-party Suricata PPA and Let's Encrypt for updates and certificates, and my own admin machine (Windows 11, kept up to date) as the way into the server.
 
 ## Related Documents
 

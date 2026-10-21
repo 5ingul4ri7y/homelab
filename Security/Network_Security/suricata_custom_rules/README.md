@@ -61,6 +61,8 @@ I then tested the first rule by trying to access the `/secret` path under my hos
 
 I then triggered the third rule, this time trying to access one of the suspicious IPs from the range specified in that rule, from the VPS itself. This tests Suricata's ability to detect and filter outbound traffic as well. It correctly triggered the rule, and the log accurately showed "Connection to Suspicious Range", matching what was specified in `local.rules`, with the VPS's own address as the source this time instead of an external one.
 
+Only rules 1 and 3 were triggered and confirmed in this lab. Rule 2, the SYN scan rule, was written and loaded but not tested. All three rules were written for learning only and were removed once the lab was done, so none of them stay on the VPS.
+
 ## Signature vs Anomaly Detection
 
 Now that Suricata is running, it is worth understanding where it actually sits among detection approaches, since it is only one piece of the picture.
@@ -71,4 +73,4 @@ Now that Suricata is running, it is worth understanding where it actually sits a
 
 **Hybrid detection** combines both approaches, which is what most modern enterprise SIEMs like Splunk and Elastic actually do. It gives the best coverage with fewer gaps, but it is also the most complex to manage, since you are now maintaining and tuning two different detection philosophies at once instead of one.
 
-Looking at my own lab setup, it is already unintentionally hybrid. Suricata handles the signature side directly. My Lynis hardening score, fail2ban's rate limiting, and UFW's logs all act as anomaly signals in a rough sense, they are not ML-based, but they still flag deviations from expected behavior rather than matching a fixed rule. In Week 11 I am planning to add auditd, which will give me a proper audit trail to actually build real anomaly analysis on top of, instead of the loose signals I have right now.
+Looking at my own lab setup, it is already unintentionally hybrid. Suricata handles the signature side directly. My Lynis hardening score, fail2ban's rate limiting, and UFW's logs all act as anomaly signals in a rough sense, they are not ML-based, but they still flag deviations from expected behavior rather than matching a fixed rule. I later added auditd in the [hardening sprint](../../System_Hardening/hardening_sprint/README.md), which gives me a proper audit trail to build real anomaly analysis on top of, instead of the loose signals I had at this point.

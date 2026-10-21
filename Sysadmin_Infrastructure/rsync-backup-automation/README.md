@@ -203,9 +203,18 @@ At least one backup should exist in a different physical location.
 
 Fire, theft, hardware failure, or another disaster that destroys the primary server should not also destroy the backup.
 
-In this lab, the second VPS serves as that offsite backup location, continuously maintaining a synchronized copy of the homelab server's web files over SSH.
+In this lab, the second VPS serves as that offsite backup location, keeping a synchronized copy of the homelab server's web files over SSH, updated every weekday at 2 AM.
 
 ---
+
+# What This Setup Does Not Cover
+
+This lab is a good first backup, not a complete backup strategy. Measured against 3-2-1, it has the original plus one offsite mirror, which is two copies and not three.
+
+- **Mirror, not history.** Because of `--delete`, an accidental deletion or corrupted file reaches the backup at the next run, and there are no older versions to go back to. Dated copies, for example `rsync --backup-dir` or `rsnapshot`, would fix this.
+- **Limited scope.** Only `/var/www` is backed up. Configuration under `/etc` (nginx, SSH, firewall) is not part of this job.
+- **Weekdays only.** Changes made over the weekend are not copied until Monday at 2 AM.
+- **Restore tested by hand once.** The restore was proven manually but is not part of the schedule.
 
 # Summary
 

@@ -225,4 +225,4 @@ In addition to all of the above, below are some extra hardening steps I took tow
 
 ![lynis hardening index after the sprint](assets/hardening14.png)
 
-After the hardening sprint, I assessed the VPS again through Lynis (`lynis audit system 2>/dev/null | grep "Hardening index"` to pull out just the score) and this time the score was above 80, specifically 82, up from the baseline of 68. That is a 14 point improvement, which was significant compared to earlier assessments.
+After the hardening sprint, I assessed the VPS again through Lynis (`lynis audit system 2>/dev/null | grep "Hardening index"` to pull out just the score) and this time the score was above 80, specifically 82, up from the baseline of 68 (one point below the end-of-Phase-3 score because of the unhardened postfix that rkhunter had installed as a dependency, which this sprint fixed). That is a 14 point improvement, which was significant compared to earlier assessments.

@@ -4,7 +4,7 @@
 
 This assessment covers the Oracle Cloud VPS running Ubuntu 24.04 that hosts my homelab website, assessed on 14 October 2026. The system is a public-facing nginx web server with SSH access, used only for labs and documentation, so it holds no production or customer data. Overall risk is rated MEDIUM. The system is well hardened, with layered controls in place (cloud and host firewalls, key-based SSH, a WAF in enforcement mode, an IDS, kernel-level audit logging and automatic security patching), and the Lynis hardening index went from 68 to 82 over the Security phase. The remaining risk comes from the public attack surface, a single administrative access path, and logs that only exist on the server itself.
 
-**Overall Risk Rating: MEDIUM** Critical findings: 0 | High: 0 | Medium: 3 | Low: 6
+**Overall Risk Rating: MEDIUM** Critical findings: 0 | High: 0 | Medium: 3 | Low: 5
 
 **Scope and method.** In scope are the VPS operating system, the services it exposes (nginx, ModSecurity, SSH) and the security tooling running on it. Out of scope are my Oracle Cloud account, my home network and admin workstation (except where they affect the risk to the VPS), and my other cloud instances. The findings come from the Lynis audits (baseline of 68 with 269 tests performed, then 82 after the hardening sprint), the VPS port audit from the Sysadmin phase, my testing of Suricata, ModSecurity and auditd during the Security phase, the incident response simulation, and manual review. Risk is scored as Likelihood x Impact on a 1 to 5 scale. A score of 1 to 5 is Low, 6 to 11 is Medium, 12 to 19 is High and 20 to 25 is Critical.
 
@@ -84,7 +84,7 @@ From the Lynis audits, the port audit, my own testing and manual review:
 **Residual risks:**
 
 1. A zero-day in nginx, OpenSSH or ModSecurity could bypass all of the current controls. The WAF and IDS are mostly signature based, so they are weakest against attacks nobody has written a rule for yet.
-2. The administrator endpoint sits outside the VPS's technical controls. My own PC (Windows 10, which is out of mainstream support) and any phishing or social engineering aimed at me are the most direct route to the server.
+2. The administrator endpoint sits outside the VPS's technical controls. My own PC (Windows 11, kept up to date) and any phishing or social engineering aimed at me are the most direct route to the server.
 3. I trust Oracle with the underlying hardware and hypervisor, and an account takeover of my Oracle Cloud console would bypass everything configured on the VPS. Both are outside the scope of this assessment.
 4. I trust the Ubuntu repositories, the third-party Suricata PPA and Let's Encrypt. A compromise of any of them would reach the server through a normal update.
 5. This is a point-in-time assessment, so it goes out of date as the system changes.
@@ -94,11 +94,10 @@ From the Lynis audits, the port audit, my own testing and manual review:
 1. Ship logs to a second system so an intruder with root cannot erase the evidence (V1).
 2. Add a second factor for SSH, such as a TOTP code alongside the key, and consider restricting SSH to known source addresses at the cloud firewall (V3).
 3. Schedule a regular reboot window so kernel patches go live, or use kernel live patching if it is available (V2).
-4. Re-add the earlier custom Suricata rules (port scan, secret path and suspicious range) to the file that is actually loaded, under unique SIDs, and only consider IPS mode after the rules have been tuned (V4).
-5. Extend the auditd rules to cover /etc/group, /etc/gshadow, /etc/sudoers.d/, auth.log and time changes, and keep an eye on audit log size (V5).
-6. Review the WAF logs for false positives and try a higher CRS paranoia level (V6).
-7. Take a full snapshot or boot volume backup and test restoring from it (V7).
-8. Keep running the periodic Lynis audits and close the remaining suggestions (V9).
+4. Extend the auditd rules to cover /etc/group, /etc/gshadow, /etc/sudoers.d/, auth.log and time changes, and keep an eye on audit log size (V4).
+5. Review the WAF logs for false positives and try a higher CRS paranoia level (V5).
+6. Take a full snapshot or boot volume backup and test restoring from it (V6).
+7. Keep running the periodic Lynis audits and close the remaining suggestions (V8).
 
 ## 7. Risk Matrix - Top 5 Risks
 
@@ -106,10 +105,10 @@ Risk = Likelihood x Impact, scored after the controls above.
 
 | ID  | Risk                                                                                                                                                                | Likelihood       | Impact        | Score | Rating | Related findings                                                                |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------- | ----- | ------ | ------------------------------------------------------------------------------- |
-| R1  | A zero-day or unpatched flaw in an exposed service (nginx, OpenSSH, ModSecurity) lets an attacker in, including the window before a patched kernel is rebooted into | 2 Unlikely       | 4 Significant | 8     | Medium | V2, V6                                                                          |
+| R1  | A zero-day or unpatched flaw in an exposed service (nginx, OpenSSH, ModSecurity) lets an attacker in, including the window before a patched kernel is rebooted into | 2 Unlikely       | 4 Significant | 8     | Medium | V2, V5                                                                          |
 | R2  | Admin access is compromised through my SSH key or my admin machine                                                                                                  | 2 Unlikely       | 4 Significant | 8     | Medium | V3                                                                              |
-| R3  | An intruder alters or deletes the local logs to hide their activity                                                                                                 | 2 Unlikely       | 3 Moderate    | 6     | Medium | V1, V5                                                                          |
-| R4  | A misconfiguration or a DNS or provider problem takes the site offline                                                                                              | 3 Possible       | 2 Minor       | 6     | Medium | V7, V8                                                                          |
+| R3  | An intruder alters or deletes the local logs to hide their activity                                                                                                 | 2 Unlikely       | 3 Moderate    | 6     | Medium | V1, V4                                                                          |
+| R4  | A misconfiguration or a DNS or provider problem takes the site offline                                                                                              | 3 Possible       | 2 Minor       | 6     | Medium | V6, V7                                                                          |
 | R5  | Constant automated scanning and exploit attempts against SSH and HTTP                                                                                               | 5 Almost certain | 1 Negligible  | 5     | Low    | Seen in the Suricata logs, blocked or logged by the firewalls, fail2ban and WAF |
 
 | Likelihood / Impact  | 1 Negligible | 2 Minor | 3 Moderate | 4 Significant | 5 Critical |

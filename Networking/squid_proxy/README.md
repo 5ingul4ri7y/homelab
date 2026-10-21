@@ -89,7 +89,7 @@ sudo iptables -I INPUT -p tcp -s YOUR_PC_IP --dport 3128 -j ACCEPT
 
 This inserts an ACCEPT rule at the top of the INPUT chain, allowing TCP
 connections to port 3128 only from the specified PC IP. iptables is covered
-in depth in a later lab.
+in depth in the [Phase 3 iptables lab](../../Sysadmin_Infrastructure/iptables/README.md).
 
 **Cloud layer (OCI Network Security Group):**
 

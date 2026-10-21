@@ -6,6 +6,14 @@ I am building toward a Cloud Engineer role, and this repository is the hands-on 
 
 Over about five months (since May 2026) I built, broke, fixed and documented a real infrastructure lab: public-facing servers on Oracle Cloud, a local Hyper-V environment with Windows Active Directory, and the security work to protect them. Every lab README records what I configured and how I verified it worked.
 
+## Start Here
+
+Short on time? These three documents show how I work best:
+
+1. [WireGuard post-mortem](Post_Mortems/postmortem_wireguard_forward_chain.md): a tunnel that handshook but passed no traffic, traced past the cloud firewall, INPUT rules, IP forwarding and NAT to a firewall rule-order root cause
+2. [Simulated C2 incident report](Audits_and_Reports/c2_incident_report/README.md): detection with Suricata, then identify, contain, eradicate and recover, with evidence at each step
+3. [VPS port audit](Sysadmin_Infrastructure/port_audit_phase3/README.md): every listener justified against `ss`, UFW, the cloud firewall and service config
+
 ## At a Glance
 
 | | |

@@ -4,7 +4,7 @@
 
 I ran `sudo lynis audit system` and got a current hardening index of 68, out of 269 tests performed. This is one point lower than the 69 from the end of Phase 3. The drop came from postfix, which was installed as a dependency of rkhunter. It was not needed on this server and was not hardened out of the box, so Lynis scored it against the system. It was fixed in the [hardening sprint](../hardening_sprint/README.md). The labs in this section harden the system to push the score higher.
 
-One thing worth flagging straight from this summary: the Malware scanner component shows `[X]`, meaning it isn't installed or active right now. That lines up directly with the Anti-Malware piece from the UTM theory earlier, ClamAV integration is exactly what would close this gap, it just hasn't been set up yet.
+One thing worth flagging straight from this summary: the Malware scanner component shows `[X]`, meaning it isn't active right now (rkhunter was installed at this point but not yet configured, so Lynis did not count it). That lines up directly with the Anti-Malware piece from the UTM theory earlier, ClamAV integration is exactly what would close this gap, it just hasn't been set up yet.
 
 ![lynis report saved](assets/lynis_run1.png)
 

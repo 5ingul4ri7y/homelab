@@ -179,7 +179,7 @@ PersistentKeepalive = 25
 ![Windows WireGuard showing Active status with curl returning VPS IP](assets/final.PNG)
 
 After activating the tunnel, `curl ifconfig.me` in PowerShell returned the
-VPS public IP confirming all traffic was routing through the tunnel.
+VPS public IP confirming all traffic was routing through the tunnel. The temporary key files for this client were then deleted from the VPS with `shred -u /tmp/win_private.key /tmp/win_public.key`, so no client private key is left on the server.
 
 ---
 
